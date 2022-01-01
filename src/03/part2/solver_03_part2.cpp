@@ -160,7 +160,7 @@ unsigned long Solver_03_part2::solve(std::istream &is)
   return oxygen * co2;
 }
 
-TEST_CASE("testing 03 part 2 solver")
+TEST_CASE("testing solver for day 3 part 2 - successive filtering by most common bits")
 {
   Solver_03_part2 solver;
   std::istringstream is(std::string{ R"(

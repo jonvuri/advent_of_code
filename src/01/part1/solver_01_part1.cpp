@@ -25,7 +25,7 @@ unsigned long Solver_01_part1::solve(std::istream &is)
   return increases;
 }
 
-TEST_CASE("testing three1 solver")
+TEST_CASE("testing solver for day 1 part 1 - number of value increases")
 {
   Solver_01_part1 solver;
   std::istringstream is(std::string{ R"(

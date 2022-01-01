@@ -122,7 +122,7 @@ unsigned long Solver_03_part1::solve(std::istream &is)
   return gamma * epsilon;
 }
 
-TEST_CASE("testing three1 solver")
+TEST_CASE("testing solver for day 3 part 1 - counting most common bits")
 {
   Solver_03_part1 solver;
   std::istringstream is(std::string{ R"(

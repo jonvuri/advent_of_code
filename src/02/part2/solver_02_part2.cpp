@@ -3,23 +3,24 @@
 
 #include <doctest/doctest.h>
 
-#include "solver_02_part1.h"
+#include "solver_02_part2.h"
 
 
-unsigned long Solver_02_part1::solve(std::istream &is)
+unsigned long Solver_02_part2::solve(std::istream &is)
 {
   std::string direction;
   long amount;
 
-  long horizontalPosition = 0, depth = 0;
+  long horizontalPosition = 0, depth = 0, aim = 0;
 
   while ((is >> direction) && (is >> amount)) {
     if (direction == "forward") {
       horizontalPosition += amount;
+      depth += amount * aim;
     } else if (direction == "down") {
-      depth += amount;
+      aim += amount;
     } else if (direction == "up") {
-      depth -= amount;
+      aim -= amount;
     } else {
       throw "Invalid direction input";
     }
@@ -34,9 +35,9 @@ unsigned long Solver_02_part1::solve(std::istream &is)
   }
 }
 
-TEST_CASE("testing solver for day 2 part 1 - submarine course")
+TEST_CASE("testing solver for day 2 part 2 - submarine course with aim")
 {
-  Solver_02_part1 solver;
+  Solver_02_part2 solver;
   std::istringstream is(std::string{ R"(
     forward 5
     down 5
@@ -47,5 +48,5 @@ TEST_CASE("testing solver for day 2 part 1 - submarine course")
   )" });
 
   // Should return the submarine course vector (depth * horizontal position)
-  CHECK(solver.solve(is) == 150);
+  CHECK(solver.solve(is) == 900);
 }

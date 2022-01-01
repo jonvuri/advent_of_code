@@ -9,6 +9,7 @@
 #include "01/part1/solver_01_part1.h"
 #include "01/part2/solver_01_part2.h"
 #include "02/part1/solver_02_part1.h"
+#include "02/part2/solver_02_part2.h"
 #include "03/part1/solver_03_part1.h"
 #include "03/part2/solver_03_part2.h"
 
@@ -82,6 +83,8 @@ int main(int argc, const char **argv)
   } else if (day == 2) {
     if (part == 1) {
       solver = new Solver_02_part1;
+    } else if (part == 2) {
+      solver = new Solver_02_part2;
     }
   } else if (day == 3) {
     if (part == 1) {
