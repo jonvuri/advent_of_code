@@ -76,6 +76,28 @@ unsigned long Three1Solver::epsilonRate(std::vector<unsigned long> const &list, 
   return result;
 }
 
+TEST_CASE("testing epsilon rate")
+{
+  Three1Solver solver;
+  std::vector<unsigned long> test_list = {
+    0b00100,
+    0b11110,
+    0b10110,
+    0b10111,
+    0b10101,
+    0b01111,
+    0b00111,
+    0b11100,
+    0b10000,
+    0b11001,
+    0b00010,
+    0b01010
+  };
+
+  CHECK(solver.epsilonRate(test_list, 5) == 9);
+}
+
+
 unsigned long Three1Solver::solve(std::istream &is)
 {
   std::vector<unsigned long> list;
