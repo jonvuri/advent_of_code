@@ -9,6 +9,7 @@ include(doctest)
 include(CTest)
 
 set (SOLVER_FILES
+  01/part1/solver_01_part1.cpp
   03/part1/solver_03_part1.cpp
   03/part2/solver_03_part2.cpp)
 

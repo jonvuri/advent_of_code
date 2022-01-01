@@ -6,6 +6,7 @@
 #include <docopt/docopt.h>
 #include <spdlog/spdlog.h>
 
+#include "01/part1/solver_01_part1.h"
 #include "03/part1/solver_03_part1.h"
 #include "03/part2/solver_03_part2.h"
 
@@ -13,6 +14,7 @@ static constexpr auto USAGE =
   R"(Advent of Code.
 
     Usage:
+          advent_of_code <day> <file>
           advent_of_code <day> <part> <file>
           advent_of_code (-h | --help)
           advent_of_code --version
@@ -29,34 +31,58 @@ int main(int argc, const char **argv)
     true,// show help if requested
     "Advent of Code 1.0");// version string
 
-  auto day = args["<day>"].asString();
-  auto part = args["<part>"].asString();
-  auto inputFilePath = args["<file>"].asString();
+  docopt::value dayArg = args["<day>"],
+                partArg = args["<part>"],
+                inputFilePathArg = args["<file>"];
+
+  long day, part;
+  std::string inputFilePath;
+
+  try {
+    day = dayArg ? dayArg.asLong() : 0;
+    part = partArg ? partArg.asLong() : 0;
+    inputFilePath = inputFilePathArg ? inputFilePathArg.asString() : "";
+  } catch (...) {
+    spdlog::error("Invalid arguments - ensure <day> and <part> are numbers and <file> is a valid path to a text file.");
+    return 1;
+  }
+
+
+  if (inputFilePath.empty()) {
+    spdlog::error("<file> cannot be empty - enter a path to a valid input file.");
+    return 1;
+  }
 
   std::ifstream inputFile(inputFilePath);
 
   if (!inputFile.is_open()) {
-    std::cerr << "Could not open input file: " << inputFilePath << std::endl;
+    spdlog::error("Could not open input file: {}", inputFilePath);
     return 1;
   }
 
   if (inputFile.peek() == EOF) {
-    std::cerr << "Input fild invalid or empty: " << inputFilePath << std::endl;
+    spdlog::error("Input file invalid or empty: {}", inputFilePath);
     return 1;
   }
 
   Solver *solver = nullptr;
 
-  if (day == "three") {
-    if (part == "one") {
+  if (day == 1) {
+    solver = new Solver_01_part1;
+  } else if (day == 3) {
+    if (part == 1) {
       solver = new Solver_03_part1;
-    } else if (part == "two") {
+    } else if (part == 2) {
       solver = new Solver_03_part2;
     }
   }
 
   if (solver == nullptr) {
-    spdlog::error("No solver for '{}'", day);
+    if (part != 0) {
+      spdlog::error("No solver for day {} part {}", day, part);
+    } else {
+      spdlog::error("No solver for day {}", day);
+    }
     return 1;
   }
 
