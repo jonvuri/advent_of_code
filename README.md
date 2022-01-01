@@ -4,6 +4,12 @@ Advent of code 2021 solutions by Jon Vuri
 
 ### Build the project
 
+Configure CMake:
+
+    cmake -S . -B ./build
+
+Then run the build:
+
     cmake --build ./build
 
 For Visual Studio, give the build configuration (Release, RelWithDeb, Debug, etc) like the following:
