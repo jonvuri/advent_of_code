@@ -2,7 +2,7 @@
 
 #include "../../solver.h"
 
-class Three2Solver : public Solver
+class Solver_03_part2 : public Solver
 {
 public:
   unsigned long findByBitCriteria(std::vector<unsigned long> list, unsigned long length, bool keepHigh);

@@ -9,8 +9,8 @@ include(doctest)
 include(CTest)
 
 set (SOLVER_FILES
-  three/part1/three1_solver.cpp
-  three/part2/three2_solver.cpp)
+  03/part1/solver_03_part1.cpp
+  03/part2/solver_03_part2.cpp)
 
 # Make main executable
 add_executable(

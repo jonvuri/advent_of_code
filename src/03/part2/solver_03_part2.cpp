@@ -3,9 +3,9 @@
 
 #include <doctest/doctest.h>
 
-#include "three2_solver.h"
+#include "solver_03_part2.h"
 
-unsigned long Three2Solver::findByBitCriteria(std::vector<unsigned long> list, unsigned long length, bool keepHigh)
+unsigned long Solver_03_part2::findByBitCriteria(std::vector<unsigned long> list, unsigned long length, bool keepHigh)
 {
   const auto size = list.size();
   std::vector<bool> keep(size, true);
@@ -82,14 +82,14 @@ unsigned long Three2Solver::findByBitCriteria(std::vector<unsigned long> list, u
 }
 
 
-unsigned long Three2Solver::oxygenRating(std::vector<unsigned long> list, unsigned long length)
+unsigned long Solver_03_part2::oxygenRating(std::vector<unsigned long> list, unsigned long length)
 {
   return findByBitCriteria(list, length, true);
 }
 
 TEST_CASE("testing oxygen rating")
 {
-  Three2Solver solver;
+  Solver_03_part2 solver;
   std::vector<unsigned long> test_list = {
     0b00100,
     0b11110,
@@ -109,14 +109,14 @@ TEST_CASE("testing oxygen rating")
 }
 
 
-unsigned long Three2Solver::CO2scrubberRating(std::vector<unsigned long> const &list, unsigned long length)
+unsigned long Solver_03_part2::CO2scrubberRating(std::vector<unsigned long> const &list, unsigned long length)
 {
   return findByBitCriteria(list, length, false);
 }
 
 TEST_CASE("testing CO2 scrubber rating")
 {
-  Three2Solver solver;
+  Solver_03_part2 solver;
   std::vector<unsigned long> test_list = {
     0b00100,
     0b11110,
@@ -136,7 +136,7 @@ TEST_CASE("testing CO2 scrubber rating")
 }
 
 
-unsigned long Three2Solver::solve(std::istream &is)
+unsigned long Solver_03_part2::solve(std::istream &is)
 {
   std::vector<unsigned long> list;
 
@@ -160,9 +160,9 @@ unsigned long Three2Solver::solve(std::istream &is)
   return oxygen * co2;
 }
 
-TEST_CASE("testing three2 solver")
+TEST_CASE("testing 03 part 2 solver")
 {
-  Three2Solver solver;
+  Solver_03_part2 solver;
   std::istringstream is(std::string{ R"(
     00100
     11110

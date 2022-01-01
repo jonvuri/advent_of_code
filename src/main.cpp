@@ -6,8 +6,8 @@
 #include <docopt/docopt.h>
 #include <spdlog/spdlog.h>
 
-#include "three/part1/three1_solver.h"
-#include "three/part2/three2_solver.h"
+#include "03/part1/solver_03_part1.h"
+#include "03/part2/solver_03_part2.h"
 
 static constexpr auto USAGE =
   R"(Advent of Code.
@@ -49,9 +49,9 @@ int main(int argc, const char **argv)
 
   if (day == "three") {
     if (part == "one") {
-      solver = new Three1Solver;
+      solver = new Solver_03_part1;
     } else if (part == "two") {
-      solver = new Three2Solver;
+      solver = new Solver_03_part2;
     }
   }
 

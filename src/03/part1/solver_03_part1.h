@@ -2,7 +2,7 @@
 
 #include "../../solver.h"
 
-class Three1Solver : public Solver
+class Solver_03_part1 : public Solver
 {
 public:
   unsigned long gammaRate(std::vector<unsigned long> const &list, unsigned long length);

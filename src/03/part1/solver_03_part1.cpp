@@ -3,9 +3,9 @@
 
 #include <doctest/doctest.h>
 
-#include "three1_solver.h"
+#include "solver_03_part1.h"
 
-unsigned long Three1Solver::gammaRate(std::vector<unsigned long> const &list, unsigned long length)
+unsigned long Solver_03_part1::gammaRate(std::vector<unsigned long> const &list, unsigned long length)
 {
   int tallies[16] = {};
 
@@ -32,7 +32,7 @@ unsigned long Three1Solver::gammaRate(std::vector<unsigned long> const &list, un
 
 TEST_CASE("testing gamma rate")
 {
-  Three1Solver solver;
+  Solver_03_part1 solver;
   std::vector<unsigned long> test_list = {
     0b00100,
     0b11110,
@@ -51,7 +51,7 @@ TEST_CASE("testing gamma rate")
   CHECK(solver.gammaRate(test_list, 5) == 22);
 }
 
-unsigned long Three1Solver::epsilonRate(std::vector<unsigned long> const &list, unsigned long length)
+unsigned long Solver_03_part1::epsilonRate(std::vector<unsigned long> const &list, unsigned long length)
 {
   int tallies[16] = {};
 
@@ -78,7 +78,7 @@ unsigned long Three1Solver::epsilonRate(std::vector<unsigned long> const &list, 
 
 TEST_CASE("testing epsilon rate")
 {
-  Three1Solver solver;
+  Solver_03_part1 solver;
   std::vector<unsigned long> test_list = {
     0b00100,
     0b11110,
@@ -98,7 +98,7 @@ TEST_CASE("testing epsilon rate")
 }
 
 
-unsigned long Three1Solver::solve(std::istream &is)
+unsigned long Solver_03_part1::solve(std::istream &is)
 {
   std::vector<unsigned long> list;
 
@@ -124,7 +124,7 @@ unsigned long Three1Solver::solve(std::istream &is)
 
 TEST_CASE("testing three1 solver")
 {
-  Three1Solver solver;
+  Solver_03_part1 solver;
   std::istringstream is(std::string{ R"(
     00100
     11110
