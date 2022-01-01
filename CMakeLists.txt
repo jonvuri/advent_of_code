@@ -7,7 +7,7 @@ project(
 )
 
 # Main executable target
-set(MAIN intro)
+set(MAIN solver)
 
 include(cmake/StandardProjectSettings.cmake)
 include(cmake/PreventInSourceBuilds.cmake)
