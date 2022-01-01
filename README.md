@@ -11,12 +11,19 @@ For Visual Studio, give the build configuration (Release, RelWithDeb, Debug, etc
     cmake --build ./build -- /p:configuration=Release
 
 
-### Running the tests
+### Running the project
 
-You can use the `ctest` command run the tests.
+After building the project, run the solver executable (run it with no arguments to see usage):
 
 ```shell
-cd ./build
-ctest -C Debug
-cd ../
+./build/src/solver 1 src/01/part1/input.txt
+```
+
+
+### Running the tests
+
+After building the project, run the doctest runner executable:
+
+```shell
+./build/unit_tests
 ```
