@@ -4,10 +4,10 @@
 
 #include <doctest/doctest.h>
 
-#include "solver_04_part1.h"
+#include "solver_04_part2.h"
 
 
-unsigned long Solver_04_part1::solve(std::istream &is)
+unsigned long Solver_04_part2::solve(std::istream &is)
 {
   std::string drawInput;
   unsigned long value;
@@ -39,12 +39,17 @@ unsigned long Solver_04_part1::solve(std::istream &is)
   bool rowWin[5];
   bool colWin[5];
 
-  unsigned long winningBoard;
+  std::vector<bool> winningBoards(boardCount, false);
 
   while (std::getline(ds, drawStr, ',')) {
     draw = std::stoul(drawStr);
 
     for (unsigned long b = 0; b < boardCount; b++) {
+      if (winningBoards[b]) {
+        // Board already won, no need to check it
+        continue;
+      }
+
       // Initialize buffers
       for (unsigned long i = 0; i < 5; i++) {
         rowWin[i] = true;
@@ -65,18 +70,29 @@ unsigned long Solver_04_part1::solve(std::istream &is)
 
       for (unsigned long i = 0; i < 5; i++) {
         if (rowWin[i] || colWin[i]) {
-          // Win! we're done
-          winningBoard = b;
+          // Win!
+          winningBoards[b] = true;
 
-          // Now just compute undrawn sum
-          unsigned long winningUndrawnSum = 0;
-          for (unsigned long j = winningBoard * 25; j < (winningBoard + 1) * 25; j++) {
-            if (!drawnNumbers[j]) {
-              winningUndrawnSum += boardNumbers[j];
+          // Check if this was the last board to win
+          bool lastBoard = true;
+          for (unsigned long j = 0; j < boardCount; j++) {
+            if (!winningBoards[j]) {
+              lastBoard = false;
             }
           }
+          if (lastBoard) {
+            // We're done - now just compute sum of undrawn numbers
+            unsigned long undrawnSum = 0;
+            for (unsigned long j = b * 25; j < (b + 1) * 25; j++) {
+              if (!drawnNumbers[j]) {
+                undrawnSum += boardNumbers[j];
+              }
+            }
 
-          return draw * winningUndrawnSum;
+            return draw * undrawnSum;
+          }
+
+          break;
         }
       }
     }
@@ -86,9 +102,9 @@ unsigned long Solver_04_part1::solve(std::istream &is)
   return 0;
 }
 
-TEST_CASE("testing solver for day 4 part 1 - bingo game")
+TEST_CASE("testing solver for day 4 part 2 - bingo game last win")
 {
-  Solver_04_part1 solver;
+  Solver_04_part2 solver;
   std::istringstream is(std::string{ R"(
     7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
@@ -111,5 +127,5 @@ TEST_CASE("testing solver for day 4 part 1 - bingo game")
     2  0 12  3  7
   )" });
 
-  CHECK(solver.solve(is) == 4512);
+  CHECK(solver.solve(is) == 1924);
 }

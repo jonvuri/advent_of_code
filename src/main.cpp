@@ -13,6 +13,7 @@
 #include "03/part1/solver_03_part1.h"
 #include "03/part2/solver_03_part2.h"
 #include "04/part1/solver_04_part1.h"
+#include "04/part2/solver_04_part2.h"
 
 static constexpr auto USAGE =
   R"(Advent of Code.
@@ -94,7 +95,11 @@ int main(int argc, const char **argv)
       solver = new Solver_03_part2;
     }
   } else if (day == 4) {
-    solver = new Solver_04_part1;
+    if (part == 1) {
+      solver = new Solver_04_part1;
+    } else if (part == 2) {
+      solver = new Solver_04_part2;
+    }
   }
 
   if (solver == nullptr) {
