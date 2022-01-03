@@ -51,7 +51,7 @@ unsigned long
   return population;
 }
 
-TEST_CASE("testing solver for day 6 part 1 - lanternfish growth")
+TEST_CASE("testing solver for day 6 part 1 - lanternfish growth, 80 days")
 {
   Solver_06_part1 solver;
   std::istringstream is(std::string{ R"(
