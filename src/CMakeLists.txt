@@ -16,7 +16,9 @@ set (SOLVER_FILES
   03/part1/solver_03_part1.cpp
   03/part2/solver_03_part2.cpp
   04/part1/solver_04_part1.cpp
-  04/part2/solver_04_part2.cpp)
+  04/part2/solver_04_part2.cpp
+  05/part1/solver_05_part1.cpp
+  05/part2/solver_05_part2.cpp)
 
 # Make main executable
 add_executable(
