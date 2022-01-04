@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_GLIBCXX_DEBUG")
+
 find_package(fmt)
 find_package(spdlog REQUIRED)
 find_package(docopt)
@@ -22,7 +24,9 @@ set (SOLVER_FILES
   06/part1/solver_06_part1.cpp
   06/part2/solver_06_part2.cpp
   07/part1/solver_07_part1.cpp
-  07/part2/solver_07_part2.cpp)
+  07/part2/solver_07_part2.cpp
+  08/part1/solver_08_part1.cpp
+  08/part2/solver_08_part2.cpp)
 
 # Make main executable
 add_executable(
