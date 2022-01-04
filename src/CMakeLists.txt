@@ -28,6 +28,7 @@ set (SOLVER_FILES
   08/part1/solver_08_part1.cpp
   08/part2/solver_08_part2.cpp
   09/part1/solver_09_part1.cpp
+  09/part2/solver_09_part2.cpp
 )
 
 # Make main executable
