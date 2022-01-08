@@ -1,5 +1,7 @@
+#include <array>
 #include <string>
 #include <sstream>
+#include <iostream>
 
 #include <doctest/doctest.h>
 
@@ -8,22 +10,22 @@
 unsigned long Solver_01_part2::solve(std::istream &is)
 {
   // Circular buffer traveled with inputIndex (pre-filled with first 3 inputs)
-  long buffer[4] = {};
+  std::array<long, 4> buffer = {};
   unsigned long inputIndex = 3;
 
   if (!(is >> buffer[0])) {
-    throw "Empty or invalid input";
+    throw solver_runtime_error("Empty or invalid input");
   }
 
   if (!(is >> buffer[1]) || !(is >> buffer[2])) {
     return 0;
   }
 
-  long lastSum = buffer[0] + buffer[1] + buffer[2], nextSum;
+  long lastSum = buffer[0] + buffer[1] + buffer[2];
   unsigned long increases = 0;
 
-  while (is >> buffer[inputIndex]) {
-    nextSum = lastSum - buffer[(inputIndex + 1) % 4] + buffer[inputIndex];
+  while (is >> buffer.at(inputIndex)) {
+    long nextSum = lastSum - buffer.at((inputIndex + 1) % 4) + buffer.at(inputIndex);
 
     if (nextSum > lastSum) {
       increases += 1;

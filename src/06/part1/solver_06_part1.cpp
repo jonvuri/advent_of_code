@@ -1,3 +1,4 @@
+#include <array>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -7,45 +8,44 @@
 #include "solver_06_part1.h"
 
 
-const int GENERATIONS = 9;
-const int DAYS = 80;
+static const unsigned long GENERATIONS = 9;
+static const unsigned long DAYS = 80;
 
 
 unsigned long
   Solver_06_part1::solve(std::istream &is)
 {
-  unsigned long generations[GENERATIONS] = {};// Days until spawn: 0, 1, 2, 3, 4, 5, 6, 7, 8
+  std::array<unsigned long, GENERATIONS> generations = {};// Days until spawn: 0, 1, 2, 3, 4, 5, 6, 7, 8
 
-  unsigned long input;
+  unsigned long input = 0;
   while (is >> input) {
-    if (input < 0 || input >= GENERATIONS) {
-      throw "Input out of range";
+    if (input >= GENERATIONS) {
+      throw solver_runtime_error("Input out of range");
     }
 
-    generations[input]++;
+    generations.at(input)++;
     is.ignore(1);
   }
 
-  unsigned long zero;
-  for (int d = 0; d < DAYS; d++) {
+  for (unsigned long d = 0; d < DAYS; d++) {
     // Store number of fish now at zero
-    zero = generations[0];
+    unsigned long zero = generations[0];
 
     // Move all generations one day to the left
-    for (int g = 0; g < GENERATIONS - 1; g++) {
-      generations[g] = generations[g + 1];
+    for (unsigned long g = 0; g < GENERATIONS - 1U; g++) {
+      generations.at(g) = generations.at(g + 1U);
     }
 
     // Spawn new fish at gen 8
-    generations[GENERATIONS - 1] = zero;
+    generations[GENERATIONS - 1U] = zero;
 
     // Move fish from gen 0 back to gen 6
-    generations[GENERATIONS - 3] += zero;
+    generations[GENERATIONS - 3U] += zero;
   }
 
   unsigned long population = 0;
-  for (int i = 0; i < GENERATIONS; i++) {
-    population += generations[i];
+  for (unsigned long i = 0; i < GENERATIONS; i++) {
+    population += generations.at(i);
   }
 
   return population;

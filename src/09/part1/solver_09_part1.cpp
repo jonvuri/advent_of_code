@@ -1,3 +1,4 @@
+#include <array>
 #include <limits>
 #include <string>
 #include <sstream>
@@ -14,17 +15,21 @@ const static size_t MAP_SIZE = 1000;
 unsigned long
   Solver_09_part1::solve(std::istream &is)
 {
-  char heightmap[MAP_SIZE][MAP_SIZE];
+  std::array<std::array<char, MAP_SIZE>, MAP_SIZE> heightmap = {};
 
-  unsigned long width = 0, height;
-  unsigned long x = 0, y = 0;
+  unsigned long width = 0;
+  unsigned long height = 0;
+  unsigned long x = 0;
+  unsigned long y = 0;
 
   // Fill up heightmap with input
-  char input;
+  char input = 0;
   while (is.get(input)) {
     if (input == ' ') {
       continue;
-    } else if (input == '\n') {
+    }
+
+    if (input == '\n') {
       if (x > width) {
         width = x;
       }
@@ -33,7 +38,7 @@ unsigned long
       }
       x = 0;
     } else {
-      heightmap[x][y] = input;
+      heightmap.at(x).at(y) = input;
       x += 1;
     }
   }
@@ -45,38 +50,38 @@ unsigned long
     for (x = 0; x < width; ++x) {
       // West
       if (x > 0) {
-        if (heightmap[x][y] >= heightmap[x - 1][y]) {
+        if (heightmap.at(x).at(y) >= heightmap.at(x - 1).at(y)) {
           continue;
         }
       }
 
       // North
       if (y > 0) {
-        if (heightmap[x][y] >= heightmap[x][y - 1]) {
+        if (heightmap.at(x).at(y) >= heightmap.at(x).at(y - 1)) {
           continue;
         }
       }
 
       // East
       if (x < width - 1) {
-        if (heightmap[x][y] >= heightmap[x + 1][y]) {
+        if (heightmap.at(x).at(y) >= heightmap.at(x + 1).at(y)) {
           continue;
         }
       }
 
       // South
       if (y < height - 1) {
-        if (heightmap[x][y] >= heightmap[x][y + 1]) {
+        if (heightmap.at(x).at(y) >= heightmap.at(x).at(y + 1)) {
           continue;
         }
       }
 
       // Passed all checks, this is a low point
-      if (heightmap[x][y] < '0') {
-        throw "Heightmap value out of range";
-      } else {
-        output_sum += static_cast<unsigned long>(heightmap[x][y] - '0') + 1;
+      if (heightmap.at(x).at(y) < '0') {
+        throw solver_runtime_error("Heightmap value out of range");
       }
+
+      output_sum += static_cast<unsigned long>(heightmap.at(x).at(y) - '0') + 1;
     }
   }
 

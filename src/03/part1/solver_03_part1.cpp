@@ -1,3 +1,4 @@
+#include <array>
 #include <string>
 #include <sstream>
 
@@ -5,16 +6,22 @@
 
 #include "solver_03_part1.h"
 
+static const unsigned long MAX_BIT_LENGTH = 16;
+
 unsigned long Solver_03_part1::gammaRate(std::vector<unsigned long> const &list, unsigned long length)
 {
-  int tallies[16] = {};
+  if (length > MAX_BIT_LENGTH) {
+    throw solver_runtime_error("Length too great");
+  }
+
+  std::array<int, MAX_BIT_LENGTH> tallies = {};
 
   for (unsigned long value : list) {
     for (unsigned long i = 0; i < length; i++) {
-      if (value & (1 << i)) {
-        tallies[i]++;
+      if ((value & (1U << i)) != 0U) {
+        tallies.at(i)++;
       } else {
-        tallies[i]--;
+        tallies.at(i)--;
       }
     }
   }
@@ -22,45 +29,29 @@ unsigned long Solver_03_part1::gammaRate(std::vector<unsigned long> const &list,
   unsigned long result = 0;
 
   for (unsigned long i = 0; i < length; i++) {
-    if (tallies[i] > 0) {
-      result += 1 << i;
+    if (tallies.at(i) > 0) {
+      result += 1U << i;
     }
   }
 
   return result;
 }
 
-TEST_CASE("testing gamma rate")
-{
-  Solver_03_part1 solver;
-  std::vector<unsigned long> test_list = {
-    0b00100,
-    0b11110,
-    0b10110,
-    0b10111,
-    0b10101,
-    0b01111,
-    0b00111,
-    0b11100,
-    0b10000,
-    0b11001,
-    0b00010,
-    0b01010
-  };
-
-  CHECK(solver.gammaRate(test_list, 5) == 22);
-}
 
 unsigned long Solver_03_part1::epsilonRate(std::vector<unsigned long> const &list, unsigned long length)
 {
-  int tallies[16] = {};
+  if (length > MAX_BIT_LENGTH) {
+    throw solver_runtime_error("Length too great");
+  }
+
+  std::array<int, MAX_BIT_LENGTH> tallies = {};
 
   for (unsigned long value : list) {
     for (unsigned long i = 0; i < length; i++) {
-      if (value & (1 << i)) {
-        tallies[i]++;
+      if ((value & (1U << i)) != 0U) {
+        tallies.at(i)++;
       } else {
-        tallies[i]--;
+        tallies.at(i)--;
       }
     }
   }
@@ -68,33 +59,12 @@ unsigned long Solver_03_part1::epsilonRate(std::vector<unsigned long> const &lis
   unsigned long result = 0;
 
   for (unsigned long i = 0; i < length; i++) {
-    if (tallies[i] <= 0) {
-      result += 1 << i;
+    if (tallies.at(i) <= 0) {
+      result += 1U << i;
     }
   }
 
   return result;
-}
-
-TEST_CASE("testing epsilon rate")
-{
-  Solver_03_part1 solver;
-  std::vector<unsigned long> test_list = {
-    0b00100,
-    0b11110,
-    0b10110,
-    0b10111,
-    0b10101,
-    0b01111,
-    0b00111,
-    0b11100,
-    0b10000,
-    0b11001,
-    0b00010,
-    0b01010
-  };
-
-  CHECK(solver.epsilonRate(test_list, 5) == 9);
 }
 
 
@@ -106,14 +76,16 @@ unsigned long Solver_03_part1::solve(std::istream &is)
   std::string str_value;
 
   while (is >> str_value) {
-    if (length == 0) length = str_value.length();
+    if (length == 0) {
+      length = str_value.length();
+    }
 
-    unsigned long value = std::stoul(str_value, 0, 2);
+    unsigned long value = std::stoul(str_value, nullptr, 2);
     list.push_back(value);
   }
 
   if (length == 0) {
-    throw "No nonempty lines";
+    throw solver_runtime_error("No nonempty lines");
   }
 
   const auto gamma = gammaRate(list, length);

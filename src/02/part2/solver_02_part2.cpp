@@ -9,9 +9,11 @@
 unsigned long Solver_02_part2::solve(std::istream &is)
 {
   std::string direction;
-  long amount;
+  long amount = 0;
 
-  long horizontalPosition = 0, depth = 0, aim = 0;
+  long horizontalPosition = 0;
+  long depth = 0;
+  long aim = 0;
 
   while ((is >> direction) && (is >> amount)) {
     if (direction == "forward") {
@@ -22,17 +24,17 @@ unsigned long Solver_02_part2::solve(std::istream &is)
     } else if (direction == "up") {
       aim -= amount;
     } else {
-      throw "Invalid direction input";
+      throw solver_runtime_error("Invalid direction input");
     }
   }
 
   long result = horizontalPosition * depth;
 
   if (result < 0) {
-    throw "Out of bounds negative result";
-  } else {
-    return static_cast<unsigned long>(result);
+    throw solver_runtime_error("Out of bounds negative result");
   }
+
+  return static_cast<unsigned long>(result);
 }
 
 TEST_CASE("testing solver for day 2 part 2 - submarine course with aim")

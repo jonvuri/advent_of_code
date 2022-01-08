@@ -1,4 +1,5 @@
 #include <climits>
+#include <numeric>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -13,24 +14,20 @@ unsigned long
 {
   std::vector<unsigned long> positions;
 
-  unsigned long input;
+  unsigned long input = 0;
   while (is >> input) {
     positions.push_back(input);
     is.ignore(1);
   }
 
   unsigned long min_total_distance = ULONG_MAX;
-  unsigned long current_total_distance = 0;
   for (const unsigned long &pivot : positions) {
-    for (const unsigned long &p : positions) {
-      current_total_distance += p > pivot ? p - pivot : pivot - p;
-    }
+    unsigned long current_total_distance = std::transform_reduce(
+      positions.begin(), positions.end(), 0U, std::plus<>(), [&](const unsigned long &p) { return p > pivot ? p - pivot : pivot - p; });
 
     if (current_total_distance < min_total_distance) {
       min_total_distance = current_total_distance;
     }
-
-    current_total_distance = 0;
   }
 
   return min_total_distance;

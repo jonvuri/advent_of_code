@@ -1,3 +1,4 @@
+#include <array>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -7,14 +8,18 @@
 #include "solver_04_part1.h"
 
 
+static const unsigned long BOARD_WIDTH = 5;
+static const unsigned long BOARD_SIZE = BOARD_WIDTH * BOARD_WIDTH;
+
+
 unsigned long Solver_04_part1::solve(std::istream &is)
 {
   std::string drawInput;
-  unsigned long value;
+  unsigned long value = 0;
   std::vector<unsigned long> boardNumbers;
 
   if (!(is >> drawInput)) {
-    throw "Empty or invalid input";
+    throw solver_runtime_error("Empty or invalid input");
   }
 
   std::stringstream ds(drawInput);
@@ -25,52 +30,45 @@ unsigned long Solver_04_part1::solve(std::istream &is)
 
   size_t len = boardNumbers.size();
 
-  if (len % 25 != 0) {
-    throw "Invalid number of board values - must be 25 each";
+  if (len % BOARD_SIZE != 0) {
+    throw solver_runtime_error("Invalid number of board values - must be " + std::to_string(BOARD_SIZE) + " each");
   }
 
-  unsigned long boardCount = len / 25;
+  unsigned long boardCount = len / BOARD_SIZE;
   std::vector<bool> drawnNumbers(len, false);
 
-  std::string drawStr;
-  unsigned long draw;
-
   // Win buffers - each row and col starts as assumed win, gets set to false if undrawn number appears
-  bool rowWin[5];
-  bool colWin[5];
+  std::array<bool, BOARD_WIDTH> rowWin = {};
+  std::array<bool, BOARD_WIDTH> colWin = {};
 
-  unsigned long winningBoard;
-
+  std::string drawStr;
   while (std::getline(ds, drawStr, ',')) {
-    draw = std::stoul(drawStr);
+    unsigned long draw = std::stoul(drawStr);
 
     for (unsigned long b = 0; b < boardCount; b++) {
       // Initialize buffers
-      for (unsigned long i = 0; i < 5; i++) {
-        rowWin[i] = true;
-        colWin[i] = true;
+      for (unsigned long i = 0; i < BOARD_WIDTH; i++) {
+        rowWin.at(i) = true;
+        colWin.at(i) = true;
       }
 
-      for (unsigned long i = b * 25; i < (b + 1) * 25; i++) {
+      for (unsigned long i = b * BOARD_SIZE; i < (b + 1) * BOARD_SIZE; i++) {
         if (boardNumbers[i] == draw) {
           drawnNumbers[i] = true;
         }
 
         // If not drawn now or prior, mark number's row/col as losing
         if (!drawnNumbers[i]) {
-          rowWin[(i % 25) / 5] = false;
-          colWin[i % 5] = false;
+          rowWin.at((i % BOARD_SIZE) / BOARD_WIDTH) = false;
+          colWin.at(i % BOARD_WIDTH) = false;
         }
       }
 
-      for (unsigned long i = 0; i < 5; i++) {
-        if (rowWin[i] || colWin[i]) {
-          // Win! we're done
-          winningBoard = b;
-
-          // Now just compute undrawn sum
+      for (unsigned long i = 0; i < BOARD_WIDTH; i++) {
+        if (rowWin.at(i) || colWin.at(i)) {
+          // Win! we're done. Now just compute undrawn sum
           unsigned long winningUndrawnSum = 0;
-          for (unsigned long j = winningBoard * 25; j < (winningBoard + 1) * 25; j++) {
+          for (unsigned long j = b * BOARD_SIZE; j < (b + 1) * BOARD_SIZE; j++) {
             if (!drawnNumbers[j]) {
               winningUndrawnSum += boardNumbers[j];
             }

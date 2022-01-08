@@ -5,7 +5,7 @@
 
 #include "solver_03_part2.h"
 
-unsigned long Solver_03_part2::findByBitCriteria(std::vector<unsigned long> list, unsigned long length, bool keepHigh)
+unsigned long Solver_03_part2::findByBitCriteria(const std::vector<unsigned long> &list, unsigned long length, bool keepHigh)
 {
   const auto size = list.size();
   std::vector<bool> keep(size, true);
@@ -18,7 +18,7 @@ unsigned long Solver_03_part2::findByBitCriteria(std::vector<unsigned long> list
     for (unsigned long i = 0; i < size; i++) {
       if (keep[i]) {
         unsigned long value = list[i];
-        if (value & (1 << position)) {
+        if ((value & (1U << position)) != 0U) {
           tally++;
         } else {
           tally--;
@@ -32,25 +32,25 @@ unsigned long Solver_03_part2::findByBitCriteria(std::vector<unsigned long> list
     // Based on tally, reject values that don't match common bit at this bit position
     for (unsigned long i = 0; i < size; i++) {
       if (keep[i]) {
-        unsigned long value = list[i] & (1 << position);
+        unsigned long value = list[i] & (1U << position);
 
         if (keepHigh) {
           if (tally < 0) {
-            if (value) {
+            if (value != 0U) {
               keep.at(i) = false;
             }
           } else {
-            if (!value) {
+            if (value == 0U) {
               keep.at(i) = false;
             }
           }
         } else {
           if (tally >= 0) {
-            if (value) {
+            if (value != 0U) {
               keep.at(i) = false;
             }
           } else {
-            if (!value) {
+            if (value == 0U) {
               keep.at(i) = false;
             }
           }
@@ -70,7 +70,7 @@ unsigned long Solver_03_part2::findByBitCriteria(std::vector<unsigned long> list
 
   for (unsigned long i = 0; i <= size; i++) {
     if (i == size) {
-      throw "No result found";
+      throw solver_runtime_error("No result found");
     }
     if (keep[i]) {
       result = list[i];
@@ -82,57 +82,15 @@ unsigned long Solver_03_part2::findByBitCriteria(std::vector<unsigned long> list
 }
 
 
-unsigned long Solver_03_part2::oxygenRating(std::vector<unsigned long> list, unsigned long length)
+unsigned long Solver_03_part2::oxygenRating(const std::vector<unsigned long> &list, unsigned long length)
 {
   return findByBitCriteria(list, length, true);
 }
 
-TEST_CASE("testing oxygen rating")
-{
-  Solver_03_part2 solver;
-  std::vector<unsigned long> test_list = {
-    0b00100,
-    0b11110,
-    0b10110,
-    0b10111,
-    0b10101,
-    0b01111,
-    0b00111,
-    0b11100,
-    0b10000,
-    0b11001,
-    0b00010,
-    0b01010
-  };
 
-  CHECK(solver.oxygenRating(test_list, 5) == 23);
-}
-
-
-unsigned long Solver_03_part2::CO2scrubberRating(std::vector<unsigned long> const &list, unsigned long length)
+unsigned long Solver_03_part2::CO2scrubberRating(const std::vector<unsigned long> &list, unsigned long length)
 {
   return findByBitCriteria(list, length, false);
-}
-
-TEST_CASE("testing CO2 scrubber rating")
-{
-  Solver_03_part2 solver;
-  std::vector<unsigned long> test_list = {
-    0b00100,
-    0b11110,
-    0b10110,
-    0b10111,
-    0b10101,
-    0b01111,
-    0b00111,
-    0b11100,
-    0b10000,
-    0b11001,
-    0b00010,
-    0b01010
-  };
-
-  CHECK(solver.CO2scrubberRating(test_list, 5) == 10);
 }
 
 
@@ -144,14 +102,16 @@ unsigned long Solver_03_part2::solve(std::istream &is)
   std::string str_value;
 
   while (is >> str_value) {
-    if (length == 0) length = str_value.length();
+    if (length == 0) {
+      length = str_value.length();
+    }
 
-    unsigned long value = std::stoul(str_value, 0, 2);
+    unsigned long value = std::stoul(str_value, nullptr, 2);
     list.push_back(value);
   }
 
   if (length == 0) {
-    throw "No nonempty lines";
+    throw solver_runtime_error("No nonempty lines");
   }
 
   const auto oxygen = oxygenRating(list, length);

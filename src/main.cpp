@@ -46,11 +46,12 @@ int main(int argc, const char **argv)
     true,// show help if requested
     "Advent of Code 1.0");// version string
 
-  docopt::value dayArg = args["<day>"],
-                partArg = args["<part>"],
-                inputFilePathArg = args["<file>"];
+  docopt::value dayArg = args["<day>"];
+  docopt::value partArg = args["<part>"];
+  docopt::value inputFilePathArg = args["<file>"];
 
-  long day, part;
+  long day = 0;
+  long part = 0;
   std::string inputFilePath;
 
   try {

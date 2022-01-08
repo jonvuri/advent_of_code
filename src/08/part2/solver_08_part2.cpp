@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <limits>
 #include <map>
@@ -14,11 +15,11 @@
 
 static unsigned long quick_pow10(const unsigned long &n)
 {
-  static const unsigned long pow10[10] = {
+  static const std::array<unsigned long, 10> pow10 = {
     1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
   };
 
-  return pow10[n];
+  return pow10.at(n);
 }
 
 
@@ -45,12 +46,18 @@ unsigned long
       output_digits.push_back(input);
     }
 
-    if (!(test_digits.size() && output_digits.size())) {
+    if (test_digits.empty() || output_digits.empty()) {
       continue;
     }
 
     // Decoded characters as we discover them (referred to as a', b', etc. later)
-    char a, b, c, d, e, f, g;
+    char a = 0;
+    char b = 0;
+    char c = 0;
+    char d = 0;
+    char e = 0;
+    char f = 0;
+    char g = 0;
 
     // First count the occurrences of each character in the input digits.
     // Since this will match the amount of each original character, and
@@ -106,6 +113,8 @@ unsigned long
       case 9:// This is f'
         f = ch;
         break;
+      default:
+        break;
       }
     }
 
@@ -118,49 +127,24 @@ unsigned long
     // 7 -> [a' c' f']
 
     // Find the 1 digit and get c'
-    for (const auto &digit : test_digits) {
-      if (digit.length() == 2) {
-        c = digit[0] == f ? digit[1] : digit[0];
-        break;
-      }
-    }
+    const auto &digit1 = *std::find_if(test_digits.begin(), test_digits.end(), [](const auto &str) -> bool { return str.length() == 2; });
+    c = digit1[0] == f ? digit1[1] : digit1[0];
 
     // Now that c' is known, we can narrow the other two down to a single character too:
 
     // Find the 4 digit and get d'
-    for (const auto &digit : test_digits) {
-      if (digit.length() == 4) {
-        for (const auto &ch : digit) {
-          if (ch != b && ch != c && ch != f) {
-            d = ch;
-            break;
-          }
-        }
-        break;
-      }
-    }
+    const auto &digit4 = *std::find_if(test_digits.begin(), test_digits.end(), [](const auto &str) -> bool { return str.length() == 4; });
+    d = *std::find_if(digit4.begin(), digit4.end(), [&](const auto &ch) -> bool { return ch != b && ch != c && ch != f; });
+
 
     // Find the 7 digit and get a'
-    for (const auto &digit : test_digits) {
-      if (digit.length() == 3) {
-        for (const auto &ch : digit) {
-          if (ch != c && ch != f) {
-            a = ch;
-            break;
-          }
-        }
-        break;
-      }
-    }
+    const auto &digit7 = *std::find_if(test_digits.begin(), test_digits.end(), [](const auto &str) -> bool { return str.length() == 3; });
+    a = *std::find_if(digit7.begin(), digit7.end(), [&](const auto &ch) -> bool { return ch != c && ch != f; });
 
 
     // Only g' remains, so simple elimination:
-    for (const char &ch : { 'a', 'b', 'c', 'd', 'e', 'f', 'g' }) {
-      if (ch != a && ch != b && ch != c && ch != d && ch != e && ch != f) {
-        g = ch;
-        break;
-      }
-    }
+    const auto all_chars = { 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
+    g = *std::find_if(all_chars.begin(), all_chars.end(), [&](const auto &ch) -> bool { return ch != a && ch != b && ch != c && ch != d && ch != e && ch != f; });
 
 
     // We now have all characters decoded, so we can build decoder sets for each digit:

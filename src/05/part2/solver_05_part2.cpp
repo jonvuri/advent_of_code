@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cmath>
 #include <map>
 #include <string>
@@ -14,7 +15,10 @@ typedef std::tuple<long, long> coordinate;
 unsigned long
   Solver_05_part2::solve(std::istream &is)
 {
-  long x1, y1, x2, y2;
+  long x1 = 0;
+  long y1 = 0;
+  long x2 = 0;
+  long y2 = 0;
   std::map<coordinate, long> heatmap;
 
   // Input format '2,2 -> 2,1'
@@ -43,18 +47,17 @@ unsigned long
 
     for (long i = 0; i <= distance; i++) {
       long &entry = heatmap[std::make_tuple(x1 + (xIncrement * i), y1 + (yIncrement * i))];
-      entry = (entry ? entry : 0) + 1;
+      entry = (entry != 0 ? entry : 0) + 1;
     }
   }
 
-  unsigned long hotAreas = 0;
-  for (auto it = heatmap.begin(); it != heatmap.end(); ++it) {
-    if (it->second > 1) {
-      hotAreas += 1;
-    }
+  const auto hotvents = std::count_if(heatmap.begin(), heatmap.end(), [](const auto &value) { return value.second > 1U; });
+
+  if (hotvents < 0) {
+    throw solver_runtime_error("Negative count");
   }
 
-  return hotAreas;
+  return static_cast<unsigned long>(hotvents);
 }
 
 TEST_CASE("testing solver for day 5 part 2 - hydrothermal vent vectors plus diagonals")

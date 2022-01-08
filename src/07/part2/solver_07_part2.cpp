@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <numeric>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -12,14 +13,11 @@ namespace {
 unsigned long mean(const std::vector<unsigned long> &list)
 {
   const auto size = list.size();
-  unsigned long mean = 0;
 
-  for (const unsigned long &value : list) {
-    mean += value;
-  }
+  const auto mean = std::reduce(list.begin(), list.end());
 
   // Safe, fast way to do positive integer division without overflows
-  return (mean / size) + (mean % size != 0);
+  return (mean / size) + static_cast<unsigned long>(mean % size != 0);
 }
 
 // Formula to find 'triangular' number - sum of all numbers from 1 to n.
@@ -33,7 +31,8 @@ unsigned long total_distance(const std::vector<unsigned long> &list, const unsig
 {
   unsigned long distance = 0;
   for (const unsigned long &p : list) {
-    distance += triangular(p > position ? p - position : position - p);
+    const auto current_distance = triangular(p > position ? p - position : position - p);
+    distance += current_distance;
   }
   return distance;
 }
@@ -45,7 +44,7 @@ unsigned long
 {
   std::vector<unsigned long> positions;
 
-  unsigned long input;
+  unsigned long input = 0;
   while (is >> input) {
     positions.push_back(input);
     is.ignore(1);

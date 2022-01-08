@@ -1,5 +1,6 @@
 #include <string>
 #include <sstream>
+#include <iostream>
 
 #include <doctest/doctest.h>
 
@@ -8,11 +9,12 @@
 
 unsigned long Solver_01_part1::solve(std::istream &is)
 {
-  long previousValue, currentValue;
+  long previousValue = 0;
+  long currentValue = 0;
   unsigned long increases = 0;
 
   if (!(is >> previousValue)) {
-    throw "Empty or invalid input";
+    throw solver_runtime_error("Empty or invalid input");
   }
 
   while (is >> currentValue) {
