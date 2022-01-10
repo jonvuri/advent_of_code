@@ -7,6 +7,7 @@ Advent of code 2021 solutions by Jon Vuri
 Configure CMake:
 
     cmake -S . -B ./build
+    cmake -S . -B ./build -D ENABLE_CPPCHECK=true -D ENABLE_CLANG_TIDY=true -D ENABLE_INCLUDE_WHAT_YOU_USE=tru
 
 Then run the build:
 
