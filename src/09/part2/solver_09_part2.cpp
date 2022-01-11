@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <array>
+#include <functional>
 #include <limits>
 #include <string>
 #include <sstream>
