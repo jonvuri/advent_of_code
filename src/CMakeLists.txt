@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_GLIBCXX_DEBUG")
 
@@ -33,6 +33,8 @@ set (SOLVER_FILES
   10/part2/solver_10_part2.cpp
   11/part1/solver_11_part1.cpp
   11/part2/solver_11_part2.cpp
+  12/part1/solver_12_part1.cpp
+  12/part2/solver_12_part2.cpp
 )
 
 # Make main executable
@@ -53,6 +55,7 @@ set_target_properties(${MAIN} PROPERTIES
   CXX_STANDARD 17
   CXX_STANDARD_REQUIRED YES
   CXX_EXTENSIONS NO
+  CXX_INCLUDE_WHAT_YOU_USE include-what-you-use
 )
 
 target_compile_definitions(${MAIN} PRIVATE DOCTEST_CONFIG_DISABLE=1)
