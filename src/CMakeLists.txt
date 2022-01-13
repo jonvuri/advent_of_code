@@ -4,7 +4,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_GLIBCXX_DEBUG")
 
 find_package(fmt)
 find_package(spdlog REQUIRED)
-find_package(docopt)
+find_package(docopt REQUIRED)
 find_package(doctest REQUIRED)
 
 include(doctest)
@@ -35,6 +35,7 @@ set (SOLVER_FILES
   11/part2/solver_11_part2.cpp
   12/part1/solver_12_part1.cpp
   12/part2/solver_12_part2.cpp
+  13/part1/solver_13_part1.cpp
 )
 
 # Make main executable
@@ -77,6 +78,7 @@ set_target_properties(${TEST_MAIN} PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
+    CXX_INCLUDE_WHAT_YOU_USE include-what-you-use
 )
 
 # Add tests to CTest
