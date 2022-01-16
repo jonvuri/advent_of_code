@@ -16,7 +16,7 @@
 // - Input list will never contain duplicate or mirrored duplicate edges (e.g. "A-b" and "b-A")
 // - Input list will always contain "start" and "end" nodes
 // - "Big" caves can be determined by just the first letter being uppercase
-unsigned long Solver_12_part1::solve(std::istream &is)
+std::string Solver_12_part1::solve(std::istream &is)
 {
   static const std::string START = "start";
   static const std::string END = "end";
@@ -77,7 +77,7 @@ unsigned long Solver_12_part1::solve(std::istream &is)
     incomplete_paths.pop();
   }
 
-  return paths.size();
+  return std::to_string(paths.size());
 }
 
 TEST_CASE("testing solver for day 12 part 1 - all paths through caves, smalls once")
@@ -95,7 +95,7 @@ TEST_CASE("testing solver for day 12 part 1 - all paths through caves, smalls on
       b-end
     )" });
 
-    CHECK(solver.solve(is) == 10);
+    CHECK(solver.solve(is) == "10");
   }
 
   {
@@ -112,6 +112,6 @@ TEST_CASE("testing solver for day 12 part 1 - all paths through caves, smalls on
       kj-dc
     )" });
 
-    CHECK(solver.solve(is) == 19);
+    CHECK(solver.solve(is) == "19");
   }
 }

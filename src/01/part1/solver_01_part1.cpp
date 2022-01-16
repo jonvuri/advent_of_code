@@ -7,7 +7,7 @@
 #include "solver_01_part1.h"
 
 
-unsigned long Solver_01_part1::solve(std::istream &is)
+std::string Solver_01_part1::solve(std::istream &is)
 {
   long previousValue = 0;
   long currentValue = 0;
@@ -24,7 +24,7 @@ unsigned long Solver_01_part1::solve(std::istream &is)
     previousValue = currentValue;
   }
 
-  return increases;
+  return std::to_string(increases);
 }
 
 TEST_CASE("testing solver for day 1 part 1 - number of value increases")
@@ -44,5 +44,5 @@ TEST_CASE("testing solver for day 1 part 1 - number of value increases")
   )" });
 
   // Should return the number of times that a value was larger than the previous value
-  CHECK(solver.solve(is) == 7);
+  CHECK(solver.solve(is) == "7");
 }

@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <boost/functional/hash.hpp>
-#include <chrono>
+#include <limits>
 #include <string>
 #include <sstream>
 #include <unordered_map>
@@ -14,123 +14,95 @@ namespace {
 
 using coord = std::pair<unsigned int, unsigned int>;
 
-const unsigned long ITERATIONS = 1000;
-
 }// namespace
 
 
-unsigned long Solver_13_part1::solve(std::istream &is)
+std::string Solver_13_part1::solve(std::istream &is)
 {
-  std::vector<coord> points;
+  std::unordered_map<coord, bool, boost::hash<coord>> point_map_alpha;
+  std::unordered_map<coord, bool, boost::hash<coord>> point_map_beta;
 
-  unsigned int coord_x = 0;
-  unsigned int coord_y = 0;
-  while (is >> coord_x && is.ignore(256, ',') && is >> coord_y) {
-    points.emplace_back(coord_x, coord_y);
-  }
+  // Fold boundary during fold operation, right / bottom boundaries any other time
+  unsigned int x_fold = 0;
+  unsigned int y_fold = 0;
 
+  {
+    unsigned int coord_x = 0;
+    unsigned int coord_y = 0;
+    while (is >> std::ws && is.peek() != 'f' && is >> coord_x && is.ignore(1) && is >> coord_y) {
+      point_map_alpha.emplace(std::make_pair(coord_x, coord_y), true);
 
-  // Pair map version
-  auto p_start = std::chrono::high_resolution_clock::now();
-
-  unsigned long p_result = 0;
-  unsigned long p_reflect_result = 0;
-
-  for (unsigned int i = 0; i < ITERATIONS; ++i) {
-    std::unordered_map<coord, bool, boost::hash<coord>> point_map;
-
-    for (unsigned int j = 0; j < ITERATIONS; ++j) {
-      for (const auto &point : points) {
-        point_map[point] = true;
+      if (coord_x + 1 > x_fold) {
+        x_fold = coord_x + 1;
       }
 
-      for (const auto &point : point_map) {
-        if (point.second) {
-          p_result += 1;
-        }
-      }
-
-      // p_result += static_cast<unsigned long>(std::count_if(point_map.begin(), point_map.end(), [](const auto &point) { return point.second; }));
-
-      for (const auto &point : point_map) {
-        const auto inverse = std::make_pair(point.first.second, point.first.first);
-        if (((point_map[inverse] ? 2 : 3) % (i + 1)) != 0) {
-          point_map[std::make_pair(point.first.first, point.first.second)] = false;
-        }
-      }
-
-
-      for (const auto &point : point_map) {
-        if (point.second) {
-          p_reflect_result += 1;
-        }
-      }
-
-      // p_reflect_result += static_cast<unsigned long>(std::count_if(point_map.begin(), point_map.end(), [](const auto &point) { return point.second; }));
-    }
-  }
-
-  auto p_end = std::chrono::high_resolution_clock::now();
-
-
-  // Double map version
-  auto d_start = std::chrono::high_resolution_clock::now();
-
-  unsigned long d_result = 0;
-  unsigned long d_reflect_result = 0;
-
-  for (unsigned int i = 0; i < ITERATIONS; ++i) {
-    std::unordered_map<unsigned int, std::unordered_map<unsigned int, bool>> point_map;
-
-    for (unsigned int j = 0; j < ITERATIONS; ++j) {
-      for (const auto &point : points) {
-        point_map[point.first][point.second] = true;
-      }
-
-      for (const auto &x_row : point_map) {
-        for (const auto &y : x_row.second) {
-          if (y.second) {
-            d_result += 1;
-          }
-        }
-      }
-
-      for (const auto &x_row : point_map) {
-        for (const auto &y : x_row.second) {
-          if (((point_map[y.first][x_row.first] ? 2 : 3) % (i + 1)) != 0) {
-            point_map[x_row.first][y.first] = false;
-          }
-        }
-      }
-
-
-      for (const auto &x_row : point_map) {
-        for (const auto &y : x_row.second) {
-          if (y.second) {
-            d_reflect_result += 1;
-          }
-        }
+      if (coord_y + 1 > y_fold) {
+        y_fold = coord_y + 1;
       }
     }
   }
 
-  auto d_end = std::chrono::high_resolution_clock::now();
+  // Ingest and perform fold commands
+  {
+    std::string command;
+    is >> std::ws;
+    std::getline(is, command, '=');
 
-  std::cout << "[Pair] Result: " << p_result << "\nReflected result: " << p_reflect_result << std::endl;
+    const auto &source_point_map = point_map_alpha;
+    auto &dest_point_map = point_map_beta;
 
-  std::cout << "[Double map] Result: " << d_result << "\nReflected result: " << d_reflect_result << std::endl;
+    if (command == "fold along x") {
+      is >> x_fold;
 
-  std::cout
-    << "\nPair version took "
-    << std::chrono::duration_cast<std::chrono::duration<double>>(p_end - p_start).count() << " seconds\n"
-    << "\nDouble map version took "
-    << std::chrono::duration_cast<std::chrono::duration<double>>(d_end - d_start).count() << " seconds\n"
-    << std::endl;
+      for (const auto &point : source_point_map) {
+        if (point.first.first > x_fold * 2 || point.first.second > y_fold) {
+          // Point past fold boundaries (not including current fold operation)
+          continue;
+        }
 
-  return p_reflect_result + d_reflect_result;
+        if (point.first.first > x_fold) {
+          dest_point_map.emplace(std::make_pair(x_fold * 2 - point.first.first, point.first.second), true);
+        } else {
+          dest_point_map.emplace(std::make_pair(point.first.first, point.first.second), true);
+        }
+      }
+    } else if (command == "fold along y") {
+      is >> y_fold;
+
+      for (const auto &point : source_point_map) {
+        if (point.first.first > x_fold || point.first.second > y_fold * 2) {
+          // Point past fold boundaries (not including current fold operation)
+          continue;
+        }
+
+        if (point.first.second > y_fold) {
+          dest_point_map.emplace(std::make_pair(point.first.first, y_fold * 2 - point.first.second), true);
+        } else {
+          dest_point_map.emplace(std::make_pair(point.first.first, point.first.second), true);
+        }
+      }
+    } else {
+      throw solver_runtime_error("Could not process fold command: " + command);
+    }
+  }
+
+
+  const auto &point_map = point_map_beta;
+
+  unsigned long result = 0;
+
+  for (unsigned int y = 0; y <= y_fold; ++y) {
+    for (unsigned int x = 0; x <= x_fold; ++x) {
+      if (point_map.find(std::make_pair(x, y)) != point_map.end()) {
+        result += 1;
+      }
+    }
+  }
+
+  return std::to_string(result);
 }
 
-TEST_CASE("testing solver for day 13 part 1 - dotted paper folding")
+TEST_CASE("testing solver for day 13 part 1 - dotted paper folding, just first fold")
 {
   Solver_13_part1 solver;
 
@@ -158,5 +130,5 @@ TEST_CASE("testing solver for day 13 part 1 - dotted paper folding")
       fold along x=5
     )" });
 
-  CHECK(solver.solve(is) == 17);
+  CHECK(solver.solve(is) == "17");
 }

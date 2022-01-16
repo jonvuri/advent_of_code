@@ -12,8 +12,7 @@
 #include "solver_10_part2.h"
 
 
-unsigned long
-  Solver_10_part2::solve(std::istream &is)
+std::string Solver_10_part2::solve(std::istream &is)
 {
   std::vector<unsigned long> scores;
 
@@ -107,7 +106,8 @@ unsigned long
 
   unsigned long n = scores.size() / 2;
   std::nth_element(scores.begin(), scores.begin() + static_cast<long>(n), scores.end());
-  return scores[n];
+
+  return std::to_string(scores[n]);
 }
 
 TEST_CASE("testing solver for day 10 part 2 - syntax parser autocomplete")
@@ -126,5 +126,5 @@ TEST_CASE("testing solver for day 10 part 2 - syntax parser autocomplete")
     <{([{{}}[<[[[<>{}]]]>[]]
   )" });
 
-  CHECK(solver.solve(is) == 288957);
+  CHECK(solver.solve(is) == "288957");
 }

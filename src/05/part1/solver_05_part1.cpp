@@ -11,8 +11,7 @@
 
 typedef std::tuple<unsigned long, unsigned long> coordinate;
 
-unsigned long
-  Solver_05_part1::solve(std::istream &is)
+std::string Solver_05_part1::solve(std::istream &is)
 {
   unsigned long x1 = 0;
   unsigned long y1 = 0;
@@ -61,7 +60,7 @@ unsigned long
     throw solver_runtime_error("Negative count");
   }
 
-  return static_cast<unsigned long>(hotvents);
+  return std::to_string(hotvents);
 }
 
 TEST_CASE("testing solver for day 5 part 1 - hydrothermal vent vectors")
@@ -80,5 +79,5 @@ TEST_CASE("testing solver for day 5 part 1 - hydrothermal vent vectors")
     5,5 -> 8,2
   )" });
 
-  CHECK(solver.solve(is) == 5);
+  CHECK(solver.solve(is) == "5");
 }

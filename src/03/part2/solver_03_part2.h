@@ -8,5 +8,5 @@ public:
   static unsigned long findByBitCriteria(const std::vector<unsigned long> &list, unsigned long length, bool keepHigh);
   static unsigned long oxygenRating(const std::vector<unsigned long> &list, unsigned long length);
   static unsigned long CO2scrubberRating(const std::vector<unsigned long> &list, unsigned long length);
-  unsigned long solve(std::istream &is) override;
+  std::string solve(std::istream &is) override;
 };

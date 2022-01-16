@@ -12,8 +12,7 @@
 const static size_t MAP_SIZE = 1000;
 
 
-unsigned long
-  Solver_09_part1::solve(std::istream &is)
+std::string Solver_09_part1::solve(std::istream &is)
 {
   std::array<std::array<char, MAP_SIZE>, MAP_SIZE> heightmap = {};
 
@@ -85,7 +84,7 @@ unsigned long
     }
   }
 
-  return output_sum;
+  return std::to_string(output_sum);
 }
 
 TEST_CASE("testing solver for day 9 part 1 - lava vent flow")
@@ -99,5 +98,5 @@ TEST_CASE("testing solver for day 9 part 1 - lava vent flow")
     9899965678
   )" });
 
-  CHECK(solver.solve(is) == 15);
+  CHECK(solver.solve(is) == "15");
 }

@@ -39,8 +39,8 @@ unsigned long total_distance(const std::vector<unsigned long> &list, const unsig
 
 }// namespace
 
-unsigned long
-  Solver_07_part2::solve(std::istream &is)
+
+std::string Solver_07_part2::solve(std::istream &is)
 {
   std::vector<unsigned long> positions;
 
@@ -53,7 +53,7 @@ unsigned long
   unsigned long mean_position = mean(positions);
 
   // Search candidate points (mean or mean minus 1)
-  return std::min(total_distance(positions, mean_position - 1), total_distance(positions, mean_position));
+  return std::to_string(std::min(total_distance(positions, mean_position - 1), total_distance(positions, mean_position)));
 }
 
 TEST_CASE("testing solver for day 7 part 2 - crab submarines, increasing fuel spend")
@@ -63,5 +63,5 @@ TEST_CASE("testing solver for day 7 part 2 - crab submarines, increasing fuel sp
     16,1,2,0,4,2,7,1,2,14
   )" });
 
-  CHECK(solver.solve(is) == 168);
+  CHECK(solver.solve(is) == "168");
 }

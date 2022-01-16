@@ -12,8 +12,7 @@ static const unsigned long GENERATIONS = 9;
 static const unsigned long DAYS = 256;
 
 
-unsigned long
-  Solver_06_part2::solve(std::istream &is)
+std::string Solver_06_part2::solve(std::istream &is)
 {
   std::array<unsigned long, GENERATIONS> generations = {};// Days until spawn: 0, 1, 2, 3, 4, 5, 6, 7, 8
 
@@ -48,7 +47,7 @@ unsigned long
     population += generations.at(i);
   }
 
-  return population;
+  return std::to_string(population);
 }
 
 TEST_CASE("testing solver for day 6 part 2 - lanternfish growth, 256 days")
@@ -58,5 +57,5 @@ TEST_CASE("testing solver for day 6 part 2 - lanternfish growth, 256 days")
     3,4,3,1,2
   )" });
 
-  CHECK(solver.solve(is) == 26984457539);
+  CHECK(solver.solve(is) == "26984457539");
 }

@@ -14,8 +14,7 @@ const static size_t MAP_SIZE = 50;
 const static unsigned int NUM_STEPS = 1000;
 
 
-unsigned long
-  Solver_11_part2::solve(std::istream &is)
+std::string Solver_11_part2::solve(std::istream &is)
 {
   std::array<std::array<unsigned long, MAP_SIZE>, MAP_SIZE> octopus_map = {};
 
@@ -112,12 +111,12 @@ unsigned long
       }
     }
     if (all_flashed) {
-      return i + 1;
+      return std::to_string(i + 1);
     }
   }
 
   // We don't expect this - at least one step should have all synchronized flashes
-  return 0;
+  return "";
 }
 
 TEST_CASE("testing solver for day 11 part 2 - octopus flashing synchronized")
@@ -136,5 +135,5 @@ TEST_CASE("testing solver for day 11 part 2 - octopus flashing synchronized")
     5283751526
   )" });
 
-  CHECK(solver.solve(is) == 195);
+  CHECK(solver.solve(is) == "195");
 }

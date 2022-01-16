@@ -6,7 +6,7 @@
 #include "solver_02_part1.h"
 
 
-unsigned long Solver_02_part1::solve(std::istream &is)
+std::string Solver_02_part1::solve(std::istream &is)
 {
   std::string direction;
   long amount = 0;
@@ -32,7 +32,7 @@ unsigned long Solver_02_part1::solve(std::istream &is)
     throw solver_runtime_error("Out of bounds negative result");
   }
 
-  return static_cast<unsigned long>(result);
+  return std::to_string(result);
 }
 
 TEST_CASE("testing solver for day 2 part 1 - submarine course")
@@ -48,5 +48,5 @@ TEST_CASE("testing solver for day 2 part 1 - submarine course")
   )" });
 
   // Should return the submarine course vector (depth * horizontal position)
-  CHECK(solver.solve(is) == 150);
+  CHECK(solver.solve(is) == "150");
 }

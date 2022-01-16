@@ -13,8 +13,7 @@
 const static size_t MAP_SIZE = 1000;
 
 
-unsigned long
-  Solver_09_part2::solve(std::istream &is)
+std::string Solver_09_part2::solve(std::istream &is)
 {
   std::array<std::array<char, MAP_SIZE>, MAP_SIZE> heightmap = {};
   std::vector<std::pair<unsigned long, unsigned long>> low_points;
@@ -113,7 +112,7 @@ unsigned long
 
   std::sort(basin_sizes.begin(), basin_sizes.end());
 
-  return basin_sizes[basin_sizes.size() - 3] * basin_sizes[basin_sizes.size() - 2] * basin_sizes[basin_sizes.size() - 1];
+  return std::to_string(basin_sizes[basin_sizes.size() - 3] * basin_sizes[basin_sizes.size() - 2] * basin_sizes[basin_sizes.size() - 1]);
 }
 
 TEST_CASE("testing solver for day 9 part 2 - lava vent flow with basins")
@@ -127,5 +126,5 @@ TEST_CASE("testing solver for day 9 part 2 - lava vent flow with basins")
     9899965678
   )" });
 
-  CHECK(solver.solve(is) == 1134);
+  CHECK(solver.solve(is) == "1134");
 }

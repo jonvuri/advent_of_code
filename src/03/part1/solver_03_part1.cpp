@@ -68,7 +68,7 @@ unsigned long Solver_03_part1::epsilonRate(std::vector<unsigned long> const &lis
 }
 
 
-unsigned long Solver_03_part1::solve(std::istream &is)
+std::string Solver_03_part1::solve(std::istream &is)
 {
   std::vector<unsigned long> list;
 
@@ -91,7 +91,7 @@ unsigned long Solver_03_part1::solve(std::istream &is)
   const auto gamma = gammaRate(list, length);
   const auto epsilon = epsilonRate(list, length);
 
-  return gamma * epsilon;
+  return std::to_string(gamma * epsilon);
 }
 
 TEST_CASE("testing solver for day 3 part 1 - counting most common bits")
@@ -112,5 +112,5 @@ TEST_CASE("testing solver for day 3 part 1 - counting most common bits")
     01010
   )" });
 
-  CHECK(solver.solve(is) == 198);
+  CHECK(solver.solve(is) == "198");
 }

@@ -8,8 +8,7 @@
 #include "solver_08_part1.h"
 
 
-unsigned long
-  Solver_08_part1::solve(std::istream &is)
+std::string Solver_08_part1::solve(std::istream &is)
 {
   unsigned long unique_digits = 0;
 
@@ -36,7 +35,7 @@ unsigned long
     }
   }
 
-  return unique_digits;
+  return std::to_string(unique_digits);
 }
 
 TEST_CASE("testing solver for day 8 part 1 - seven segment display decoding and counting unique-length digits only")
@@ -55,5 +54,5 @@ TEST_CASE("testing solver for day 8 part 1 - seven segment display decoding and 
     gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
   )" });
 
-  CHECK(solver.solve(is) == 26);
+  CHECK(solver.solve(is) == "26");
 }

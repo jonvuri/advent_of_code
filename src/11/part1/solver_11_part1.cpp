@@ -14,8 +14,7 @@ const static size_t MAP_SIZE = 50;
 const static unsigned int NUM_STEPS = 100;
 
 
-unsigned long
-  Solver_11_part1::solve(std::istream &is)
+std::string Solver_11_part1::solve(std::istream &is)
 {
   std::array<std::array<unsigned long, MAP_SIZE>, MAP_SIZE> octopus_map = {};
 
@@ -103,7 +102,7 @@ unsigned long
     }
   }
 
-  return flashes;
+  return std::to_string(flashes);
 }
 
 TEST_CASE("testing solver for day 11 part 1 - octopus flashing")
@@ -122,5 +121,5 @@ TEST_CASE("testing solver for day 11 part 1 - octopus flashing")
     5283751526
   )" });
 
-  CHECK(solver.solve(is) == 1656);
+  CHECK(solver.solve(is) == "1656");
 }

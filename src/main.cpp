@@ -30,6 +30,8 @@
 #include "11/part2/solver_11_part2.h"
 #include "12/part1/solver_12_part1.h"
 #include "12/part2/solver_12_part2.h"
+#include "13/part1/solver_13_part1.h"
+#include "13/part2/solver_13_part2.h"
 
 static constexpr auto USAGE =
   R"(Advent of Code.
@@ -165,6 +167,12 @@ int main(int argc, const char **argv)
     } else if (part == 2) {
       solver = new Solver_12_part2;
     }
+  } else if (day == 13) {
+    if (part == 1) {
+      solver = new Solver_13_part1;
+    } else if (part == 2) {
+      solver = new Solver_13_part2;
+    }
   }
 
   if (solver == nullptr) {
@@ -172,9 +180,7 @@ int main(int argc, const char **argv)
     return 1;
   }
 
-  unsigned long result = solver->solve(inputFile);
-
-  std::cout << "Result: " << result << std::endl;
+  std::cout << "Result: " << solver->solve(inputFile) << std::endl;
 
   return 0;
 }

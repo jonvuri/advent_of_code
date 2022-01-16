@@ -11,8 +11,7 @@
 #include "solver_10_part1.h"
 
 
-unsigned long
-  Solver_10_part1::solve(std::istream &is)
+std::string Solver_10_part1::solve(std::istream &is)
 {
   unsigned long error_score = 0;
 
@@ -77,7 +76,7 @@ unsigned long
     }
   }
 
-  return error_score;
+  return std::to_string(error_score);
 }
 
 TEST_CASE("testing solver for day 10 part 1 - syntax checker")
@@ -96,5 +95,5 @@ TEST_CASE("testing solver for day 10 part 1 - syntax checker")
     <{([{{}}[<[[[<>{}]]]>[]]
   )" });
 
-  CHECK(solver.solve(is) == 26397);
+  CHECK(solver.solve(is) == "26397");
 }

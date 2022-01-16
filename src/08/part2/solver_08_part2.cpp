@@ -23,8 +23,7 @@ static unsigned long quick_pow10(const unsigned long &n)
 }
 
 
-unsigned long
-  Solver_08_part2::solve(std::istream &is)
+std::string Solver_08_part2::solve(std::istream &is)
 {
   unsigned long output_sum = 0;
 
@@ -178,7 +177,7 @@ unsigned long
     }
   }
 
-  return output_sum;
+  return std::to_string(output_sum);
 }
 
 TEST_CASE("testing solver for day 8 part 2 - seven segment display full decoding with output sum")
@@ -197,5 +196,5 @@ TEST_CASE("testing solver for day 8 part 2 - seven segment display full decoding
     gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
   )" });
 
-  CHECK(solver.solve(is) == 61229);
+  CHECK(solver.solve(is) == "61229");
 }

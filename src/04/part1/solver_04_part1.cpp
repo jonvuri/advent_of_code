@@ -12,7 +12,7 @@ static const unsigned long BOARD_WIDTH = 5;
 static const unsigned long BOARD_SIZE = BOARD_WIDTH * BOARD_WIDTH;
 
 
-unsigned long Solver_04_part1::solve(std::istream &is)
+std::string Solver_04_part1::solve(std::istream &is)
 {
   std::string drawInput;
   unsigned long value = 0;
@@ -74,14 +74,14 @@ unsigned long Solver_04_part1::solve(std::istream &is)
             }
           }
 
-          return draw * winningUndrawnSum;
+          return std::to_string(draw * winningUndrawnSum);
         }
       }
     }
   }
 
   // No winning board found after drawing all numbers. This is unexpected
-  return 0;
+  return "";
 }
 
 TEST_CASE("testing solver for day 4 part 1 - bingo game")
@@ -109,5 +109,5 @@ TEST_CASE("testing solver for day 4 part 1 - bingo game")
     2  0 12  3  7
   )" });
 
-  CHECK(solver.solve(is) == 4512);
+  CHECK(solver.solve(is) == "4512");
 }

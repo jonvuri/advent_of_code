@@ -9,8 +9,7 @@
 #include "solver_07_part1.h"
 
 
-unsigned long
-  Solver_07_part1::solve(std::istream &is)
+std::string Solver_07_part1::solve(std::istream &is)
 {
   std::vector<unsigned long> positions;
 
@@ -30,7 +29,7 @@ unsigned long
     }
   }
 
-  return min_total_distance;
+  return std::to_string(min_total_distance);
 }
 
 TEST_CASE("testing solver for day 7 part 1 - crab submarines, constant fuel spend")
@@ -40,5 +39,5 @@ TEST_CASE("testing solver for day 7 part 1 - crab submarines, constant fuel spen
     16,1,2,0,4,2,7,1,2,14
   )" });
 
-  CHECK(solver.solve(is) == 37);
+  CHECK(solver.solve(is) == "37");
 }

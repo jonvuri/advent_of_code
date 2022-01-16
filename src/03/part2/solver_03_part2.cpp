@@ -94,7 +94,7 @@ unsigned long Solver_03_part2::CO2scrubberRating(const std::vector<unsigned long
 }
 
 
-unsigned long Solver_03_part2::solve(std::istream &is)
+std::string Solver_03_part2::solve(std::istream &is)
 {
   std::vector<unsigned long> list;
 
@@ -117,7 +117,7 @@ unsigned long Solver_03_part2::solve(std::istream &is)
   const auto oxygen = oxygenRating(list, length);
   const auto co2 = CO2scrubberRating(list, length);
 
-  return oxygen * co2;
+  return std::to_string(oxygen * co2);
 }
 
 TEST_CASE("testing solver for day 3 part 2 - successive filtering by most common bits")
@@ -138,5 +138,5 @@ TEST_CASE("testing solver for day 3 part 2 - successive filtering by most common
     01010
   )" });
 
-  CHECK(solver.solve(is) == 230);
+  CHECK(solver.solve(is) == "230");
 }

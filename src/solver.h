@@ -3,12 +3,13 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <string>
 
 class Solver
 {
 public:
   virtual ~Solver() = default;
-  virtual unsigned long solve(std::istream &is) = 0;
+  virtual std::string solve(std::istream &is) = 0;
 };
 
 class solver_runtime_error : public std::runtime_error

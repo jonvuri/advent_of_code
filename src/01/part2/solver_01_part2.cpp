@@ -7,7 +7,7 @@
 
 #include "solver_01_part2.h"
 
-unsigned long Solver_01_part2::solve(std::istream &is)
+std::string Solver_01_part2::solve(std::istream &is)
 {
   // Circular buffer traveled with inputIndex (pre-filled with first 3 inputs)
   std::array<long, 4> buffer = {};
@@ -18,7 +18,7 @@ unsigned long Solver_01_part2::solve(std::istream &is)
   }
 
   if (!(is >> buffer[1]) || !(is >> buffer[2])) {
-    return 0;
+    return "";
   }
 
   long lastSum = buffer[0] + buffer[1] + buffer[2];
@@ -35,7 +35,7 @@ unsigned long Solver_01_part2::solve(std::istream &is)
     inputIndex = (inputIndex + 1) % 4;
   }
 
-  return increases;
+  return std::to_string(increases);
 }
 
 TEST_CASE("testing solver for day 1 part 2 - number of rolling sum increases")
@@ -55,5 +55,5 @@ TEST_CASE("testing solver for day 1 part 2 - number of rolling sum increases")
   )" });
 
   // Should return the number of times that a rolling sum of 3 values was larger than the previous sum
-  CHECK(solver.solve(is) == 5);
+  CHECK(solver.solve(is) == "5");
 }
