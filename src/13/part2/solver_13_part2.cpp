@@ -126,15 +126,6 @@ using coord = std::pair<unsigned int, unsigned int>;
 
 std::string Solver_13_part2::solve(std::istream &is)
 {
-  // const auto LETTER_B = Letter_B();
-  // const auto LETTER_F = Letter_F();
-  // const auto LETTER_G = Letter_G();
-  // const auto LETTER_H = Letter_H();
-  // const auto LETTER_L = Letter_L();
-  // const auto LETTER_R = Letter_R();
-  // const auto LETTER_U = Letter_U();
-
-
   bool on_beta = false;
   std::unordered_map<coord, bool, boost::hash<coord>> point_map_alpha;
   std::unordered_map<coord, bool, boost::hash<coord>> point_map_beta;
@@ -242,20 +233,6 @@ std::string Solver_13_part2::solve(std::istream &is)
 
     letter.clear();
   }
-
-
-  // std::cout << "Final map: \n";
-  // for (unsigned int y = 0; y < y_fold; ++y) {
-  //   for (unsigned int x = 0; x < x_fold; ++x) {
-  //     if (point_map.find(std::make_pair(x, y)) != point_map.end()) {
-  //       std::cout << "#";
-  //     } else {
-  //       std::cout << ".";
-  //     }
-  //   }
-  //   std::cout << '\n';
-  // }
-  // std::cout << std::endl;
 
   return result;
 }
