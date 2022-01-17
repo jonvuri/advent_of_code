@@ -1,0 +1,7 @@
+#include "../../solver.h"
+
+class Solver_14_part2 : public Solver
+{
+public:
+  std::string solve(std::istream &is) override;
+};
