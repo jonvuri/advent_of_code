@@ -114,7 +114,7 @@ std::string Solver_14_part2::solve(std::istream &is)
   return std::to_string(max - min);
 }
 
-TEST_CASE("testing solver for day 14 part 22- polymerization")
+TEST_CASE("testing solver for day 14 part 2 - polymerization with more steps")
 {
   Solver_14_part2 solver;
 
