@@ -6,12 +6,13 @@
 #include <queue>
 #include <string>
 #include <sstream>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
 #include <doctest/doctest.h>
 
-#include "solver_15_part1.h"
+#include "solver_15_part2.h"
 
 
 namespace {
@@ -22,30 +23,20 @@ class Vertex
 {
 private:
   Coordinate position_;
-  Coordinate parent_position_;// Next vertex back that continues current lowest cost path that was found
   unsigned int g_ = std::numeric_limits<unsigned int>::max();// Current lowest total cost to travel from start to this vertex (including this vertex's cost)
-  unsigned int h_;// Pre-computed heuristic - Manhattan distance from vertex to end (equal to shortest path from this vertex to end if all costs are 1)
   unsigned int cost_;// Cost of entering this vertex
 
-  // Lowest g + h = f is the next vertex we consider in the search
-  [[nodiscard]] unsigned int f() const
-  {
-    return g_ + h_;
-  };
-
 public:
-  explicit Vertex(const Coordinate position, const unsigned int cost, const unsigned int h)
-    : position_(position), h_(h), cost_(cost) {}
+  explicit Vertex(const Coordinate position, const unsigned int cost)
+    : position_(position), cost_(cost) {}
 
   // Used for priority queue minimum
-  friend bool operator>(const Vertex &lhs, const Vertex &rhs) { return lhs.f() > rhs.f(); }
+  friend bool operator>(const Vertex &lhs, const Vertex &rhs) { return lhs.g() > rhs.g(); }
 
   [[nodiscard]] Coordinate position() const
   {
     return position_;
   }
-
-  Coordinate &parent_position() { return parent_position_; }
 
   unsigned int &g() { return g_; }
   [[nodiscard]] unsigned int g() const { return g_; }
@@ -60,11 +51,12 @@ std::vector<Coordinate> getNeighborCoords(Coordinate center, unsigned int width,
   const auto &x = center.first;
   const auto &y = center.second;
 
-  if (x > 0) {
+  // Don't bother returning the start vertex at 0,0
+  if (y > 0 ? x > 0 : x > 1) {
     neighbors.emplace_back(std::make_pair(x - 1, y));
   }
 
-  if (y > 0) {
+  if (x > 0 ? y > 0 : y > 1) {
     neighbors.emplace_back(std::make_pair(x, y - 1));
   }
 
@@ -82,9 +74,9 @@ std::vector<Coordinate> getNeighborCoords(Coordinate center, unsigned int width,
 }// namespace
 
 
-std::string Solver_15_part1::solve(std::istream &is)
+std::string Solver_15_part2::solve(std::istream &is)
 {
-  std::vector<std::tuple<unsigned int, unsigned int, unsigned int>> inputs;
+  std::vector<std::tuple<unsigned int, unsigned int, unsigned int>> base_inputs;
 
   unsigned int width = 0;
   unsigned int height = 0;
@@ -114,7 +106,7 @@ std::string Solver_15_part1::solve(std::istream &is)
           throw solver_runtime_error("Input out of range");
         }
 
-        inputs.emplace_back(std::make_tuple(x, y, cost));
+        base_inputs.emplace_back(std::make_tuple(x, y, cost));
 
         x += 1;
       }
@@ -122,23 +114,39 @@ std::string Solver_15_part1::solve(std::istream &is)
     height = x == 0 ? y : y + 1;
   }
 
+  std::vector<std::tuple<unsigned int, unsigned int, unsigned int>> inputs;
+
+  // Duplicate the map 4 times to the right and downward
+  for (const auto &[x, y, cost] : base_inputs) {
+    inputs.emplace_back(x, y, cost);
+    for (unsigned int cell_y = 0; cell_y < 5; ++cell_y) {
+      for (unsigned int cell_x = 0; cell_x < 5; ++cell_x) {
+        if (cell_x == 0 and cell_y == 0) {
+          continue;
+        }
+
+        inputs.emplace_back(std::make_tuple(
+          x + width * cell_x,
+          y + height * cell_y,
+          ((cost + cell_x + cell_y - 1) % 9) + 1));
+      }
+    }
+  }
+
+  width *= 5;
+  height *= 5;
+
   unsigned int goal_x = width - 1;
   unsigned int goal_y = height - 1;
 
   Coordinate start = std::make_pair(0, 0);
   Coordinate goal = std::make_pair(goal_x, goal_y);
 
-  // Now that we know the width / height we can precompute h (distance) and populate the full map
   std::unordered_map<Coordinate, Vertex, boost::hash<Coordinate>> cave_map;
 
   for (const auto &[x, y, cost] : inputs) {
     const Coordinate position = std::make_pair(x, y);
-
-    // Manhattan distance heuristic for 4-movement grid: |goal_x - vertex_x| + |goal_y - vertex_y|
-    // We don't need to do abs (||) op, because we assume the goal is always at the bottom right corner
-    const auto h = (goal_x - x) + (goal_y - y);
-
-    cave_map.emplace(position, Vertex(position, cost, h));
+    cave_map.emplace(position, Vertex(position, cost));
   }
 
   std::priority_queue<Vertex, std::vector<Vertex>, std::greater<>> open_list;
@@ -148,9 +156,7 @@ std::string Solver_15_part1::solve(std::istream &is)
   cave_map.at(start).g() = 0;
   open_list.push(cave_map.at(start));// No need to place it on set too, it will just be immediately erased
 
-  // Use A* search to find guaranteed shortest path
-  // Assuming A* w/ Manhattan distance will work here might be incorrect? It solved part 1
-  // but brought unexpected problems in part 2.
+  // Use BFS algorithm to find the shortest path
   while (!open_list.empty()) {
     const Vertex vertex = open_list.top();
     open_list.pop();
@@ -158,14 +164,7 @@ std::string Solver_15_part1::solve(std::istream &is)
 
     if (vertex.position() == goal) {
       // Goal found! Trace path and end
-      unsigned int cost = 0;
-
-      // Don't count start cost
-      for (Coordinate c = vertex.position(); c != start; c = cave_map.at(c).parent_position()) {
-        cost += cave_map.at(c).cost();
-      }
-
-      return std::to_string(cost);
+      return std::to_string(vertex.g());
     }
 
     // Only visit every vertex once
@@ -182,12 +181,11 @@ std::string Solver_15_part1::solve(std::istream &is)
 
       if (new_g < neighbor_vertex.g()) {
         neighbor_vertex.g() = new_g;
-        neighbor_vertex.parent_position() = vertex.position();
-      }
 
-      if (closed_set.find(neighbor_coord) == closed_set.end() && open_set.find(neighbor_coord) == open_set.end()) {
-        open_list.push(neighbor_vertex);
-        open_set.insert(neighbor_coord);
+        if (open_set.find(neighbor_coord) == open_set.end()) {
+          open_list.push(neighbor_vertex);
+          open_set.insert(neighbor_coord);
+        }
       }
     }
   }
@@ -195,9 +193,9 @@ std::string Solver_15_part1::solve(std::istream &is)
   throw solver_runtime_error("Could not find a path to the goal");
 }
 
-TEST_CASE("testing solver for day 15 part 1 - path through chiton cave")
+TEST_CASE("testing solver for day 15 part 2 - path through chiton cave expanded 5 times right/downward")
 {
-  Solver_15_part1 solver;
+  Solver_15_part2 solver;
 
   {
     std::istringstream is(std::string{ R"(
@@ -213,9 +211,8 @@ TEST_CASE("testing solver for day 15 part 1 - path through chiton cave")
       2311944581
     )" });
 
-    CHECK(solver.solve(is) == "40");
+    CHECK(solver.solve(is) == "315");
   }
-
 
   {
     std::istringstream is(std::string{ R"(
@@ -224,7 +221,7 @@ TEST_CASE("testing solver for day 15 part 1 - path through chiton cave")
       11191
     )" });
 
-    CHECK(solver.solve(is) == "8");
+    CHECK(solver.solve(is) == "158");
   }
 
   {
@@ -234,6 +231,6 @@ TEST_CASE("testing solver for day 15 part 1 - path through chiton cave")
       11195
     )" });
 
-    CHECK(solver.solve(is) == "12");
+    CHECK(solver.solve(is) == "138");
   }
 }
