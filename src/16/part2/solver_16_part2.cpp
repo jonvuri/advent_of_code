@@ -16,108 +16,128 @@
 
 namespace {
 
-unsigned long read_number(const std::string &bit_list)
+std::string hex_to_bin(char c)
 {
-  std::bitset<32> bits(bit_list);
-  return bits.to_ulong();
+  if (isspace(c) != 0) {
+    return "";
+  }
+
+  switch (c) {
+  case '0':
+    return "0000";
+  case '1':
+    return "0001";
+  case '2':
+    return "0010";
+  case '3':
+    return "0011";
+  case '4':
+    return "0100";
+  case '5':
+    return "0101";
+  case '6':
+    return "0110";
+  case '7':
+    return "0111";
+  case '8':
+    return "1000";
+  case '9':
+    return "1001";
+  case 'A':
+    return "1010";
+  case 'B':
+    return "1011";
+  case 'C':
+    return "1100";
+  case 'D':
+    return "1101";
+  case 'E':
+    return "1110";
+  case 'F':
+    return "1111";
+  default:
+    throw solver_runtime_error("Invalid hex character");
+  }
 }
 
-enum Operation {
+enum PacketTypeId {
   Sum = 0,
   Product = 1,
   Minimum = 2,
   Maximum = 3,
+  Literal = 4,
   GreaterThan = 5,
   LessThan = 6,
   EqualTo = 7
 };
 
-unsigned long
-  perform_operation(Operation type, std::vector<unsigned long> values)
+unsigned long parse_packet(std::string &bin)
 {
-  if (type < 4) {// List operations
-    switch (type) {
-    case Sum:
-      return std::accumulate(values.begin(), values.end(), 0UL);
-    case Product:
-      return std::accumulate(values.begin(), values.end(), 1UL, std::multiplies<>());
-    case Minimum:
-      return *std::min_element(values.begin(), values.end());
-    case Maximum:
-      return *std::max_element(values.begin(), values.end());
-    default:
-      throw solver_runtime_error("Unexpected operation type ID");
-    }
-  } else {// Binary operations
-    if (values.size() != 2) {
-      throw solver_runtime_error("Didn't get two values for binary operation");
-    }
+  // Skip over unneeded version string from bin.begin() to bin.begin() + 3
+  std::string type_id_str{ bin.begin() + 3, bin.begin() + 6 };
+  bin.erase(bin.begin(), bin.begin() + 6);
 
-    switch (type) {
-    case GreaterThan:
-      return values[0] > values[1] ? 1 : 0;
-    case LessThan:
-      return values[0] < values[1] ? 1 : 0;
-    case EqualTo:
-      return values[0] == values[1] ? 1 : 0;
-    default:
-      throw solver_runtime_error("Unexpected operation type ID");
-    }
-  }
-}
+  int type_id = std::stoi(type_id_str, nullptr, 2);
 
-// Returns tuple of pos after reading, and value of packet [value, pos]
-std::tuple<unsigned long, unsigned int> read_packet(std::string input, unsigned int pos)
-{
-  if (pos >= input.size()) {
-    // No more packets
-    return { 0, pos };
-  }
+  if (type_id == Literal) {
+    std::string value_str;
 
-  pos += 3;
-  const auto type_id = read_number(input.substr(pos, 3));
-  pos += 3;
-
-  if (type_id == 4) {// Literal
-    std::string literal;
-
-    for (bool go = true; go; pos += 5) {
-      go = input[pos] == '1';
-      literal += input.substr(pos + 1, 4);
-    }
-
-    return { read_number(literal), pos };
-  } else {// Operator
-    const auto length_bit = input[pos];
-    pos += 1;
-
-    std::vector<unsigned long> packet_values;
-
-    if (length_bit == '0') {// Length given in number of bits in subpackets
-      const auto total_bits = read_number(input.substr(pos, 15));
-      pos += 15;
-
-      const auto end_bit = pos + total_bits;
-
-      while (pos < end_bit) {
-        auto [value, packet_end_pos] = read_packet(input, pos);
-        pos = packet_end_pos;
-
-        packet_values.push_back(value);
+    bool keep_reading = true;
+    while (keep_reading) {
+      if (bin.front() == '0') {
+        keep_reading = false;
       }
-    } else {// Length given in number of subpackets
-      const auto total_packets = read_number(input.substr(pos, 11));
-      pos += 11;
+      bin.erase(bin.begin());
 
-      for (unsigned int p = 0; p < total_packets; ++p) {
-        auto [value, packet_end_pos] = read_packet(input, pos);
-        pos = packet_end_pos;
+      value_str.append({ bin.begin(), bin.begin() + 4 });
+      bin.erase(bin.begin(), bin.begin() + 4);
+    }
 
-        packet_values.push_back(value);
+    return std::stoul(value_str, nullptr, 2);
+  } else {//Operator type
+    std::vector<unsigned long> sub_packet_values;
+
+    char length_type_id{ bin.front() };
+    bin.erase(bin.begin());
+
+    if (length_type_id == '0') {//Bit length
+      std::string bit_length_str{ bin.begin(), bin.begin() + 15 };
+      bin.erase(bin.begin(), bin.begin() + 15);
+
+      unsigned long bit_length = std::stoul(bit_length_str, nullptr, 2);
+
+      size_t curr_size = bin.size();
+      while (bin.size() > curr_size - bit_length) {
+        sub_packet_values.push_back(parse_packet(bin));
+      }
+    } else {//Packet length
+      std::string packet_length_str{ bin.begin(), bin.begin() + 11 };
+      bin.erase(bin.begin(), bin.begin() + 11);
+
+      unsigned long packet_length = std::stoul(packet_length_str, nullptr, 2);
+
+      for (unsigned long i = 0; i < packet_length; i++) {
+        sub_packet_values.push_back(parse_packet(bin));
       }
     }
 
-    return { perform_operation(static_cast<Operation>(type_id), packet_values), pos };
+    if (type_id == Sum) {
+      return std::accumulate(sub_packet_values.begin(), sub_packet_values.end(), 0UL);
+    } else if (type_id == Product) {
+      return std::accumulate(sub_packet_values.begin(), sub_packet_values.end(), 1UL, std::multiplies<>());
+    } else if (type_id == Minimum) {
+      return *std::min_element(sub_packet_values.begin(), sub_packet_values.end());
+    } else if (type_id == Maximum) {
+      return *std::max_element(sub_packet_values.begin(), sub_packet_values.end());
+    } else if (type_id == GreaterThan) {
+      return sub_packet_values[0] > sub_packet_values[1] ? 1 : 0;
+    } else if (type_id == LessThan) {
+      return sub_packet_values[0] < sub_packet_values[1] ? 1 : 0;
+    } else if (type_id == EqualTo) {
+      return sub_packet_values[0] == sub_packet_values[1] ? 1 : 0;
+    } else {
+      throw solver_runtime_error("Invalid packet type ID");
+    }
   }
 }
 
@@ -126,24 +146,17 @@ std::tuple<unsigned long, unsigned int> read_packet(std::string input, unsigned 
 
 std::string Solver_16_part2::solve(std::istream &is)
 {
-  std::string binary_input;
+  std::string binary_input_str;
+  std::string line;
 
-  for (char c = 0; is.get(c);) {
-    if (isspace(c) == 0) {
-      unsigned long num = 0;
+  is >> std::ws;
+  std::getline(is, line);
 
-      std::istringstream iss(std::string(1, c));
-      iss >> std::hex >> num;
-
-      std::bitset<4> bit_input(num);
-
-      binary_input.append(bit_input.to_string());
-    }
+  for (const char ch : line) {
+    binary_input_str.append(hex_to_bin(ch));
   }
 
-  auto [value, _] = read_packet(binary_input, 0);
-
-  return std::to_string(value);
+  return std::to_string(parse_packet(binary_input_str));
 }
 
 TEST_CASE("testing solver for day 16 part 2 - hexadecimal packet parser with operators implemented")
