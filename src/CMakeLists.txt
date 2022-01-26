@@ -7,6 +7,7 @@ find_package(spdlog REQUIRED)
 find_package(docopt REQUIRED)
 find_package(doctest REQUIRED)
 
+include_directories(${DOCOPT_INCLUDE_DIRS})
 include(doctest)
 include(CTest)
 
@@ -45,6 +46,7 @@ set (SOLVER_FILES
   16/part2/solver_16_part2.cpp
   17/part1/solver_17_part1.cpp
   17/part2/solver_17_part2.cpp
+  18/part1/solver_18_part1.cpp
 )
 
 # Make main executable
