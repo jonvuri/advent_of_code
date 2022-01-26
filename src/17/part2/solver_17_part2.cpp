@@ -93,7 +93,7 @@ std::string Solver_17_part2::solve(std::istream &is)
   return std::to_string(velocities.size());
 }
 
-TEST_CASE("testing solver for day 17 part 1 - probe launch")
+TEST_CASE("testing solver for day 17 part 1 - probe launch all possible velocities")
 {
   Solver_17_part2 solver;
 
