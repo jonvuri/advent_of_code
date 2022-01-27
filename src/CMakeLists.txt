@@ -47,6 +47,7 @@ set (SOLVER_FILES
   17/part1/solver_17_part1.cpp
   17/part2/solver_17_part2.cpp
   18/part1/solver_18_part1.cpp
+  18/part2/solver_18_part2.cpp
 )
 
 # Make main executable
