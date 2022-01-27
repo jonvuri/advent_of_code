@@ -1,12 +1,10 @@
 #include <algorithm>
-#include <array>
-#include <bitset>
-#include <limits>
+#include <cctype>
+#include <cstddef>
+#include <functional>
 #include <numeric>
-#include <stack>
-#include <string>
 #include <sstream>
-#include <tuple>
+#include <string>
 #include <vector>
 
 #include <doctest/doctest.h>

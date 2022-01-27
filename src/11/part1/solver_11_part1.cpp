@@ -1,9 +1,8 @@
 #include <array>
+#include <cstddef>
 #include <functional>
-#include <limits>
-#include <string>
 #include <sstream>
-#include <vector>
+#include <string>
 
 #include <doctest/doctest.h>
 

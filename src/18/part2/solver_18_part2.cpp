@@ -1,10 +1,10 @@
+#include <algorithm>
 #include <array>
 #include <cctype>
-#include <list>
-#include <numeric>
-#include <regex>
-#include <string>
+#include <iterator>
 #include <sstream>
+#include <string>
+#include <utility>
 #include <vector>
 
 #include <doctest/doctest.h>

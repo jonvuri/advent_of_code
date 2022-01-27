@@ -1,9 +1,12 @@
 #include <algorithm>
+#include <cctype>
+#include <iterator>
 #include <limits>
 #include <list>
-#include <string>
 #include <sstream>
+#include <string>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include <doctest/doctest.h>

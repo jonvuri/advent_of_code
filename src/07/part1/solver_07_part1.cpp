@@ -1,7 +1,8 @@
-#include <climits>
+#include <functional>
+#include <limits.h>
 #include <numeric>
-#include <string>
 #include <sstream>
+#include <string>
 #include <vector>
 
 #include <doctest/doctest.h>

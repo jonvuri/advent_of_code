@@ -1,8 +1,11 @@
+#include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <regex>
 #include <set>
-#include <string>
 #include <sstream>
+#include <string>
+#include <utility>
 #include <vector>
 
 #include <doctest/doctest.h>

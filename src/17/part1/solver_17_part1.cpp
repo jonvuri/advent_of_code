@@ -1,6 +1,8 @@
+#include <cstdlib>
 #include <regex>
-#include <string>
 #include <sstream>
+#include <string>
+#include <vector>
 
 #include <doctest/doctest.h>
 

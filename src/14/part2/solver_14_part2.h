@@ -1,3 +1,6 @@
+#include <iosfwd>
+#include <string>
+
 #include "../../solver.h"
 
 class Solver_14_part2 : public Solver

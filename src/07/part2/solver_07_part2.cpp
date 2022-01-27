@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <numeric>
-#include <string>
 #include <sstream>
+#include <string>
 #include <vector>
 
 #include <doctest/doctest.h>

@@ -64,6 +64,8 @@ target_link_libraries(
           doctest::doctest
           spdlog::spdlog)
           
+set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE include-what-you-use)
+
 set_target_properties(${MAIN} PROPERTIES
   CXX_STANDARD 17
   CXX_STANDARD_REQUIRED YES

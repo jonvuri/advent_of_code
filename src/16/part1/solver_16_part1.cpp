@@ -1,11 +1,8 @@
-#include <array>
 #include <bitset>
-#include <limits>
-#include <stack>
-#include <string>
+#include <cctype>
 #include <sstream>
+#include <string>
 #include <tuple>
-#include <vector>
 
 #include <doctest/doctest.h>
 

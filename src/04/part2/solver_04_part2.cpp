@@ -1,6 +1,7 @@
 #include <array>
-#include <string>
+#include <cstddef>
 #include <sstream>
+#include <string>
 #include <vector>
 
 #include <doctest/doctest.h>

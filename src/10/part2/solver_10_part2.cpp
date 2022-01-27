@@ -1,10 +1,8 @@
 #include <algorithm>
-#include <array>
 #include <cctype>
-#include <limits>
-#include <string>
 #include <sstream>
 #include <stack>
+#include <string>
 #include <vector>
 
 #include <doctest/doctest.h>

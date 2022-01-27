@@ -1,12 +1,14 @@
 #include <algorithm>
-#include <array>
 #include <boost/functional/hash.hpp>
 #include <functional>
 #include <limits>
 #include <queue>
-#include <string>
 #include <sstream>
+#include <string>
+#include <tuple>
+#include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 #include <doctest/doctest.h>

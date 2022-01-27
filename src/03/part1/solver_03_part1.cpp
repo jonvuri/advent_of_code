@@ -1,6 +1,6 @@
 #include <array>
-#include <string>
 #include <sstream>
+#include <string>
 
 #include <doctest/doctest.h>
 

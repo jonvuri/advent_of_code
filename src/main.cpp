@@ -1,7 +1,9 @@
-#include <fstream>
-#include <functional>
+#include <bits/exception.h>
+#include <cstdio>
 #include <iostream>
+#include <iterator>
 #include <map>
+#include <string>
 
 #include <docopt/docopt.h>
 #include <spdlog/spdlog.h>

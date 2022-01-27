@@ -1,10 +1,9 @@
 #include <algorithm>
 #include <boost/functional/hash.hpp>
 #include <cctype>
-#include <limits>
 #include <sstream>
 #include <unordered_map>
-#include <vector>
+#include <utility>
 
 #include <doctest/doctest.h>
 
