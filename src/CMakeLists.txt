@@ -48,6 +48,7 @@ set (SOLVER_FILES
   17/part2/solver_17_part2.cpp
   18/part1/solver_18_part1.cpp
   18/part2/solver_18_part2.cpp
+  19/part1/solver_19_part1.cpp
 )
 
 # Make main executable
@@ -101,4 +102,11 @@ doctest_discover_tests(
   TEST_PREFIX advent
   ADD_LABELS 1
 )
+
+# Enable colored compiler output
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  add_compile_options (-fdiagnostics-color=always)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  add_compile_options (-fcolor-diagnostics)
+endif ()
 

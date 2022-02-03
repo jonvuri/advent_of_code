@@ -1,5 +1,5 @@
+#include <climits>
 #include <functional>
-#include <limits.h>
 #include <numeric>
 #include <sstream>
 #include <string>

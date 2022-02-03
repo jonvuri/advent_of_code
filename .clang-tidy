@@ -1,5 +1,5 @@
 ---
-Checks:          '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trailing-return-type,-llvm*,performance-*,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers,-useStlAlgorithm,-readability-else-after-return'
+Checks:          '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trailing-return-type,-llvm*,performance-*,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers,-useStlAlgorithm,-readability-else-after-return,-hicpp-no-array-decay,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-misc-non-private-member-variables-in-classes'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 FormatStyle:     none
