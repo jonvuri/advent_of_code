@@ -9,7 +9,7 @@
 
 #include <doctest/doctest.h>
 
-#include "solver_20_part1.h"
+#include "solver_20_part2.h"
 
 
 namespace {
@@ -88,7 +88,7 @@ long count_lit_pixels(const std::vector<std::vector<bool>> &canvas)
 }// namespace
 
 
-std::string Solver_20_part1::solve(std::istream &is)
+std::string Solver_20_part2::solve(std::istream &is)
 {
   // Ingest algorithm inputs
   std::vector<bool> algorithm_inputs;
@@ -150,16 +150,16 @@ std::string Solver_20_part1::solve(std::istream &is)
   }
 
   auto canvas = image_inputs;
-  for (size_t i = 0; i < 2; ++i) {
+  for (size_t i = 0; i < 50; ++i) {
     canvas = enhance_canvas(canvas, algorithm_inputs, (i + 1) % 2 == 0);
   }
 
   return std::to_string(count_lit_pixels(canvas));
 }
 
-TEST_CASE("testing solver for day 20 part 1 - image enhancement")
+TEST_CASE("testing solver for day 20 part 2 - image enhancement x 50")
 {
-  Solver_20_part1 solver;
+  Solver_20_part2 solver;
 
   std::istringstream is(std::string{ R"(
     ..#.#..#####.#.#.#.###.##.....###.##.#..###.####..#####..#....#..#..##..###..######.###...####..#..#####..##..#.#####...##.#.#..#.##..#.#......#.###.######.###.####...#.##.##..#..#..#####.....#.#....###..#.##......#.....#..#..#..##..#...##.######.####.####.#.#...#.......#..#.#.#...####.##.#......#..#...##.#.##..#...##.#.##..###.#......#.#.......#.#.#.####.###.##...#.....####.#..#..#.##.#....##..#.####....##...##..#...#......#.#.......#.......##..####..#...#.#.#...##..#.#..###..#####........#..####......#..#
@@ -171,5 +171,5 @@ TEST_CASE("testing solver for day 20 part 1 - image enhancement")
     ..###
   )" });
 
-  CHECK(solver.solve(is) == "35");
+  CHECK(solver.solve(is) == "3351");
 }
