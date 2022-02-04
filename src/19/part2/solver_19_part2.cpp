@@ -13,7 +13,7 @@
 
 #include <doctest/doctest.h>
 
-#include "solver_19_part1.h"
+#include "solver_19_part2.h"
 
 
 namespace {
@@ -60,13 +60,6 @@ struct Beacon
   friend bool operator!=(const Beacon &lhs, const Beacon &rhs)
   {
     return !(lhs == rhs);
-  }
-
-  friend bool operator<(const Beacon &lhs, const Beacon &rhs)
-  {
-    const auto l_magnitude = lhs.x * lhs.x + lhs.y * lhs.y + lhs.z * lhs.z;
-    const auto r_magnitude = rhs.x * rhs.x + rhs.y * rhs.y + rhs.z * rhs.z;
-    return l_magnitude < r_magnitude;
   }
 
   struct Hasher
@@ -362,7 +355,7 @@ struct ZeroMapping
 }// namespace
 
 
-std::string Solver_19_part1::solve(std::istream &is)
+std::string Solver_19_part2::solve(std::istream &is)
 {
   std::vector<std::vector<Beacon>> scanners;
 
@@ -458,6 +451,8 @@ std::string Solver_19_part1::solve(std::istream &is)
 
   std::unordered_map<size_t, ZeroMapping> scanner_zero_mappings = {};
 
+  scanner_zero_mappings[0] = ZeroMapping{ Beacon{ 0, 0, 0 }, rotate<0, 0, 0> };
+
   // Initialize with all mappings coming from scanner 0
   for (const auto &pair_mapping : scanner_pair_mappings) {
     if (pair_mapping.from_scanner == 0) {
@@ -510,31 +505,26 @@ std::string Solver_19_part1::solve(std::istream &is)
     }
   }
 
-  std::vector<Beacon> mapped_beacons;
+  long max_manhattan_distance = 0;
+  for (size_t i = 0; i < scanner_zero_mappings.size(); ++i) {
+    for (size_t j = i + 1; j < scanner_zero_mappings.size(); ++j) {
+      const auto &oi = scanner_zero_mappings[i].offset;
+      const auto &oj = scanner_zero_mappings[j].offset;
 
-  // Copy zero scanner's beacons as is, this is the origin mapping
-  const auto zero_scanner = scanners[0];
-  std::copy(zero_scanner.begin(), zero_scanner.end(), std::back_inserter(mapped_beacons));
+      const long manhattan_distance = std::abs(oi.x - oj.x) + std::abs(oi.y - oj.y) + std::abs(oi.z - oj.z);
 
-  // Insert the rest of the beacons after mapping them from the origin
-  for (size_t i = 1; i < scanners.size(); ++i) {
-    const auto &mapping = scanner_zero_mappings.at(i);
-    for (const auto &beacon : scanners.at(i)) {
-      Beacon mapped = mapping.offset + mapping.rotation(beacon);
-      mapped_beacons.push_back(mapped);
+      if (manhattan_distance > max_manhattan_distance) {
+        max_manhattan_distance = manhattan_distance;
+      }
     }
   }
 
-  // De-duplicate common beacons to get only unique ones
-  std::sort(mapped_beacons.begin(), mapped_beacons.end());
-  mapped_beacons.erase(std::unique(mapped_beacons.begin(), mapped_beacons.end()), mapped_beacons.end());
-
-  return std::to_string(mapped_beacons.size());
+  return std::to_string(max_manhattan_distance);
 }
 
-TEST_CASE("testing solver for day 19 part 1 - scanner positioning")
+TEST_CASE("testing solver for day 19 part 1 - scanner positioning, max manhattan distance")
 {
-  Solver_19_part1 solver;
+  Solver_19_part2 solver;
 
   std::istringstream is(std::string{ R"(
       --- scanner 0 ---
@@ -675,5 +665,5 @@ TEST_CASE("testing solver for day 19 part 1 - scanner positioning")
       30,-46,-14
     )" });
 
-  CHECK(solver.solve(is) == "79");
+  CHECK(solver.solve(is) == "3621");
 }
