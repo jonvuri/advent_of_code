@@ -34,3 +34,10 @@ After building the project, run the doctest runner executable:
 ```shell
 ./build/unit_tests
 ```
+
+
+### Running include-what-you-use
+
+```shell
+iwyu_tool -p build/compile_commands.json -- -I/usr/lib/llvm-10/lib/clang/10.0.0/include
+```
